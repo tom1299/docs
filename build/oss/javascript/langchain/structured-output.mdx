@@ -19,7 +19,7 @@ const agent = createAgent({
 })
 ```
 
-## Response Format
+## Response format
 
 Controls how the agent returns structured data. You can provide either a Zod object or JSON schema. By default, the agent uses a tool calling strategy, in which the output is created by an additional tool call. Certain models support native structured output, in which case the agent will use that strategy instead.
 
@@ -39,21 +39,21 @@ const agent = createAgent({
 The structured response is returned in the `structuredResponse` key of the agent's final state.
 
 <Tip>
-Support for native structured output features is read dynamically from the model's [profile data](/oss/javascript/langchain/models#model-profiles) if using `langchain>=1.1`. If data are not available, use another condition or specify manually:
-```typescript
-const customProfile: ModelProfile = {
-    structuredOutput: true,
-    // ...
-}
-const model = await initChatModel("...", { profile: customProfile });
-```
-If tools are specified, the model must support simultaneous use of tools and structured output.
+    Support for native structured output features is read dynamically from the model's [profile data](/oss/javascript/langchain/models#model-profiles) if using `langchain>=1.1`. If data are not available, use another condition or specify manually:
+    ```typescript
+    const customProfile: ModelProfile = {
+        structuredOutput: true,
+        // ...
+    }
+    const model = await initChatModel("...", { profile: customProfile });
+    ```
+    If tools are specified, the model must support simultaneous use of tools and structured output.
 </Tip>
 
 
 ## Provider strategy
 
-Some model providers support structured output natively through their APIs (e.g. OpenAI, Grok, Gemini). This is the most reliable method when available.
+Some model providers support structured output natively through their APIs (e.g. OpenAI, xAI (Grok), Gemini, Anthropic (Claude)). This is the most reliable method when available.
 
 To use this strategy, configure a `ProviderStrategy`:
 
@@ -131,13 +131,15 @@ Provider-native structured output provides high reliability and strict validatio
 
 
 <Note>
-    If the provider natively supports structured output for your model choice, it is functionally equivalent to write `responseFormat: contactInfoSchema` instead of `responseFormat: providerStrategy(contactInfoSchema)`. In either case, if structured output is not supported, the agent will fall back to a tool calling strategy.
+    If the provider natively supports structured output for your model choice, it is functionally equivalent to write `responseFormat: contactInfoSchema` instead of `responseFormat: providerStrategy(contactInfoSchema)`.
+
+    In either case, if structured output is not supported, the agent will fall back to a tool calling strategy.
 </Note>
 
 
 ## Tool calling strategy
 
-For models that don't support native structured output, LangChain uses tool calling to achieve the same result. This works with all models that support tool calling, which is most modern models.
+For models that don't support native structured output, LangChain uses tool calling to achieve the same result. This works with all models that support tool calling (most modern models).
 
 To use this strategy, configure a `ToolStrategy`:
 
@@ -430,6 +432,7 @@ console.log(result);
 You can customize how errors are handled using the `handleErrors` parameter:
 
 **Custom error message:**
+
 ```ts
 const responseFormat = toolStrategy(ProductRating, {
     handleError: "Please provide a valid rating between 1-5 and include a comment."
@@ -440,6 +443,7 @@ const responseFormat = toolStrategy(ProductRating, {
 ```
 
 **Handle specific exceptions only:**
+
 ```ts
 import { ToolInputParsingException } from "@langchain/core/tools";
 
@@ -457,6 +461,7 @@ const responseFormat = toolStrategy(ProductRating, {
 ```
 
 **Handle multiple exception types:**
+
 ```ts
 const responseFormat = toolStrategy(ProductRating, {
     handleError: (error: ToolStrategyError) => {
@@ -472,6 +477,7 @@ const responseFormat = toolStrategy(ProductRating, {
 ```
 
 **No error handling:**
+
 ```ts
 const responseFormat = toolStrategy(ProductRating, {
     handleError: false  // All errors raised
@@ -481,8 +487,8 @@ const responseFormat = toolStrategy(ProductRating, {
 ---
 
 <Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/structured-output.mdx)
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/structured-output.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Tip>

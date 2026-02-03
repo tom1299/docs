@@ -44,7 +44,7 @@ const searchDatabase = tool(
 
 
 
-## Accessing Context
+## Accessing context
 
 <Info>
 **Why this matters:** Tools are most powerful when they can access agent state, runtime context, and long-term memory. This enables tools to make context-aware decisions, personalize responses, and maintain information across conversations.
@@ -84,7 +84,7 @@ const contextSchema = z.object({
 });
 
 const agent = createAgent({
-  model: new ChatOpenAI({ model: "gpt-4o" }),
+  model: new ChatOpenAI({ model: "gpt-4.1" }),
   tools: [getUserName],
   contextSchema,
 });
@@ -150,7 +150,7 @@ const saveUserInfo = tool(
 );
 
 const agent = createAgent({
-  model: new ChatOpenAI({ model: "gpt-4o" }),
+  model: new ChatOpenAI({ model: "gpt-4.1" }),
   tools: [getUserInfo, saveUserInfo],
   store,
 });
@@ -180,7 +180,7 @@ console.log(result);
 ```
 
 
-#### Stream Writer
+#### Stream writer
 
 
 
@@ -188,15 +188,17 @@ Stream custom updates from tools as they execute using `config.streamWriter`. Th
 
 ```ts
 import * as z from "zod";
-import { tool } from "langchain";
+import { tool, ToolRuntime } from "langchain";
 
 const getWeather = tool(
-  ({ city }, config) => {
-    const writer = config.streamWriter;
+  ({ city }, config: ToolRuntime) => {
+    const writer = config.writer;
 
     // Stream custom updates as the tool executes
-    writer(`Looking up data for city: ${city}`);
-    writer(`Acquired data for city: ${city}`);
+    if (writer) {
+      writer(`Looking up data for city: ${city}`);
+      writer(`Acquired data for city: ${city}`);
+    }
 
     return `It's always sunny in ${city}!`;
   },
@@ -213,8 +215,8 @@ const getWeather = tool(
 ---
 
 <Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/tools.mdx)
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/tools.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Tip>

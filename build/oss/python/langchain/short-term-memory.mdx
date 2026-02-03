@@ -78,6 +78,9 @@ with PostgresSaver.from_conn_string(DB_URI) as checkpointer:
 
 
 
+<Note>
+    For more checkpointer options including SQLite, Postgres, and Azure Cosmos DB, see the [list of checkpointer libraries](/oss/python/langgraph/persistence#checkpointer-libraries) in the Persistence documentation.
+</Note>
 
 ## Customizing agent memory
 
@@ -304,7 +307,7 @@ for event in agent.stream(
 The problem with trimming or removing messages, as shown above, is that you may lose information from culling of the message queue.
 Because of this, some applications benefit from a more sophisticated approach of summarizing the message history using a chat model.
 
-![](/oss/images/summary.png)
+![Summary](/oss/images/summary.png)
 
 
 To summarize message history in an agent, use the built-in [``SummarizationMiddleware``](/oss/python/langchain/middleware#summarization):
@@ -319,11 +322,11 @@ from langchain_core.runnables import RunnableConfig
 checkpointer = InMemorySaver()
 
 agent = create_agent(
-    model="gpt-4o",
+    model="gpt-4.1",
     tools=[],
     middleware=[
         SummarizationMiddleware(
-            model="gpt-4o-mini",
+            model="gpt-4.1-mini",
             trigger=("tokens", 4000),
             keep=("messages", 20)
         )
@@ -357,9 +360,9 @@ You can access and modify the short-term memory (state) of an agent in several w
 
 #### Read short-term memory in a tool
 
-Access short term memory (state) in a tool using the `ToolRuntime` parameter.
+Access short term memory (state) in a tool using the `runtime` parameter (typed as `ToolRuntime`).
 
-The `tool_runtime` parameter is hidden from the tool signature (so the model doesn't see it), but the tool can access the state through it.
+The `runtime` parameter is hidden from the tool signature (so the model doesn't see it), but the tool can access the state through it.
 
 ```python
 from langchain.agents import create_agent, AgentState
@@ -676,8 +679,8 @@ agent = create_agent(
 ---
 
 <Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/short-term-memory.mdx)
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/short-term-memory.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Tip>

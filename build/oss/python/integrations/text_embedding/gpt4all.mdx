@@ -6,7 +6,7 @@ title: GPT4All
 
 This notebook explains how to use [GPT4All embeddings](https://docs.gpt4all.io/gpt4all_python_embedding.html#gpt4all.gpt4all.Embed4All) with LangChain.
 
-## Install GPT4All's Python Bindings
+## Install GPT4All's Python bindings
 
 ```python
 pip install -qU  gpt4all > /dev/null
@@ -20,7 +20,7 @@ from langchain_community.embeddings import GPT4AllEmbeddings
 gpt4all_embd = GPT4AllEmbeddings()
 ```
 
-```output
+```text
 Model downloaded at:  /Users/rlm/.cache/gpt4all/ggml-all-MiniLM-L6-v2-f16.bin
 ```
 
@@ -28,7 +28,7 @@ Model downloaded at:  /Users/rlm/.cache/gpt4all/ggml-all-MiniLM-L6-v2-f16.bin
 text = "This is a test document."
 ```
 
-## Embed the Textual Data
+## Embed the textual data
 
 ```python
 query_result = gpt4all_embd.embed_query(text)
@@ -43,8 +43,8 @@ doc_result = gpt4all_embd.embed_documents([text])
 ---
 
 <Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/text_embedding/gpt4all.mdx)
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/text_embedding/gpt4all.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Tip>

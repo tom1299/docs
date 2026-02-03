@@ -41,11 +41,11 @@ Automatically summarize conversation history when approaching token limits, pres
 import { createAgent, summarizationMiddleware } from "langchain";
 
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [weatherTool, calculatorTool],
   middleware: [
     summarizationMiddleware({
-      model: "gpt-4o-mini",
+      model: "gpt-4.1-mini",
       trigger: { tokens: 4000 },
       keep: { messages: 20 },
     }),
@@ -72,7 +72,7 @@ const agent = createAgent({
 </Tip>
 
 <ParamField body="model" type="string | BaseChatModel" required>
-    Model for generating summaries. Can be a model identifier string (e.g., `'openai:gpt-4o-mini'`) or a `BaseChatModel` instance.
+    Model for generating summaries. Can be a model identifier string (e.g., `'openai:gpt-4.1-mini'`) or a `BaseChatModel` instance.
 </ParamField>
 
 <ParamField body="trigger" type="object | object[]">
@@ -129,11 +129,11 @@ const agent = createAgent({
 The summarization middleware monitors message token counts and automatically summarizes older messages when thresholds are reached.
 
 **Trigger conditions** control when summarization runs:
-- Single condition object (all properties must be met - AND logic)
+- Single condition object (specified must be met)
 - Array of conditions (any condition must be met - OR logic)
 - Each condition can use `fraction` (of model's context size), `tokens` (absolute count), or `messages` (message count)
 
-**Keep conditions** control how much context to preserve (specify exactly one):
+**Keep condition** control how much context to preserve (specify exactly one):
 - `fraction` - Fraction of model's context size to keep
 - `tokens` - Absolute token count to keep
 - `messages` - Number of recent messages to keep
@@ -145,11 +145,11 @@ import { createAgent, summarizationMiddleware } from "langchain";
 
 // Single condition
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [weatherTool, calculatorTool],
   middleware: [
     summarizationMiddleware({
-      model: "gpt-4o-mini",
+      model: "gpt-4.1-mini",
       trigger: { tokens: 4000, messages: 10 },
       keep: { messages: 20 },
     }),
@@ -158,11 +158,11 @@ const agent = createAgent({
 
 // Multiple conditions
 const agent2 = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [weatherTool, calculatorTool],
   middleware: [
     summarizationMiddleware({
-      model: "gpt-4o-mini",
+      model: "gpt-4.1-mini",
       trigger: [
         { tokens: 3000, messages: 6 },
       ],
@@ -173,11 +173,11 @@ const agent2 = createAgent({
 
 // Using fractional limits
 const agent3 = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [weatherTool, calculatorTool],
   middleware: [
     summarizationMiddleware({
-      model: "gpt-4o-mini",
+      model: "gpt-4.1-mini",
       trigger: { fraction: 0.8 },
       keep: { fraction: 0.3 },
     }),
@@ -218,15 +218,13 @@ function sendEmailTool(recipient: string, subject: string, body: string): string
 }
 
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [readEmailTool, sendEmailTool],
   middleware: [
     humanInTheLoopMiddleware({
       interruptOn: {
         sendEmailTool: {
-          allowAccept: true,
-          allowEdit: true,
-          allowRespond: true,
+          allowedDecisions: ["approve", "edit", "reject"],
         },
         readEmailTool: false,
       }
@@ -259,9 +257,11 @@ Limit the number of model calls to prevent infinite loops or excessive costs. Mo
 
 ```typescript
 import { createAgent, modelCallLimitMiddleware } from "langchain";
+import { MemorySaver } from "@langchain/langgraph";
 
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
+  checkpointer: new MemorySaver(), // Required for thread limiting
   tools: [],
   middleware: [
     modelCallLimitMiddleware({
@@ -316,7 +316,7 @@ Control agent execution by limiting the number of tool calls, either globally ac
 import { createAgent, toolCallLimitMiddleware } from "langchain";
 
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [searchTool, databaseTool],
   middleware: [
     toolCallLimitMiddleware({ threadLimit: 20, runLimit: 10 }),
@@ -388,7 +388,7 @@ const databaseLimiter = toolCallLimitMiddleware({ toolName: "query_database", th
 const strictLimiter = toolCallLimitMiddleware({ toolName: "scrape_webpage", runLimit: 2, exitBehavior: "error" });
 
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [searchTool, databaseTool, scraperTool],
   middleware: [globalLimiter, searchLimiter, databaseLimiter, strictLimiter],
 });
@@ -412,11 +412,11 @@ Automatically fallback to alternative models when the primary model fails. Model
 import { createAgent, modelFallbackMiddleware } from "langchain";
 
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [],
   middleware: [
     modelFallbackMiddleware(
-      "gpt-4o-mini",
+      "gpt-4.1-mini",
       "claude-3-5-sonnet-20241022"
     ),
   ],
@@ -461,7 +461,7 @@ Detect and handle Personally Identifiable Information (PII) in conversations usi
 import { createAgent, piiMiddleware } from "langchain";
 
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [],
   middleware: [
     piiMiddleware("email", { strategy: "redact", applyToInput: true }),
@@ -489,7 +489,7 @@ import { createAgent, piiMiddleware, type PIIMatch } from "langchain";
 
 // Method 1: Regex pattern string
 const agent1 = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [],
   middleware: [
     piiMiddleware("api_key", {
@@ -501,7 +501,7 @@ const agent1 = createAgent({
 
 // Method 2: RegExp object
 const agent2 = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [],
   middleware: [
     piiMiddleware("phone_number", {
@@ -533,7 +533,7 @@ function detectSSN(content: string): PIIMatch[] {
 }
 
 const agent3 = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [],
   middleware: [
     piiMiddleware("ssn", {
@@ -635,7 +635,7 @@ Equip agents with task planning and tracking capabilities for complex multi-step
 import { createAgent, todoListMiddleware } from "langchain";
 
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [readFile, writeFile, runTests],
   middleware: [todoListMiddleware()],
 });
@@ -675,11 +675,11 @@ This middleware uses structured output to ask an LLM which tools are most releva
 import { createAgent, llmToolSelectorMiddleware } from "langchain";
 
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [tool1, tool2, tool3, tool4, tool5, ...],
   middleware: [
     llmToolSelectorMiddleware({
-      model: "gpt-4o-mini",
+      model: "gpt-4.1-mini",
       maxTools: 3,
       alwaysInclude: ["search"],
     }),
@@ -693,7 +693,7 @@ const agent = createAgent({
 
 
 <ParamField body="model" type="string | BaseChatModel">
-    Model for tool selection. Can be a model identifier string (e.g., `'openai:gpt-4o-mini'`) or a `BaseChatModel` instance. Defaults to the agent's main model.
+    Model for tool selection. Can be a model identifier string (e.g., `'openai:gpt-4.1-mini'`) or a `BaseChatModel` instance. Defaults to the agent's main model.
 </ParamField>
 
 <ParamField body="systemPrompt" type="string">
@@ -728,7 +728,7 @@ Automatically retry failed tool calls with configurable exponential backoff. Too
 import { createAgent, toolRetryMiddleware } from "langchain";
 
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [searchTool, databaseTool],
   middleware: [
     toolRetryMiddleware({
@@ -812,7 +812,7 @@ import { z } from "zod";
 
 // Basic usage with default settings (2 retries, exponential backoff)
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [searchTool, databaseTool],
   middleware: [toolRetryMiddleware()],
 });
@@ -900,7 +900,7 @@ Automatically retry failed model calls with configurable exponential backoff. Mo
 import { createAgent, modelRetryMiddleware } from "langchain";
 
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [searchTool, databaseTool],
   middleware: [
     modelRetryMiddleware({
@@ -962,7 +962,7 @@ import { createAgent, modelRetryMiddleware } from "langchain";
 
 // Basic usage with default settings (2 retries, exponential backoff)
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [searchTool],
   middleware: [modelRetryMiddleware()],
 });
@@ -1046,7 +1046,7 @@ Emulate tool execution using an LLM for testing purposes, replacing actual tool 
 import { createAgent, toolEmulatorMiddleware } from "langchain";
 
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [getWeather, searchDatabase, sendEmail],
   middleware: [
     toolEmulatorMiddleware(), // Emulate all tools
@@ -1104,14 +1104,14 @@ const sendEmail = tool(
 
 // Emulate all tools (default behavior)
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [getWeather, sendEmail],
   middleware: [toolEmulatorMiddleware()],
 });
 
 // Emulate specific tools by name
 const agent2 = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [getWeather, sendEmail],
   middleware: [
     toolEmulatorMiddleware({
@@ -1122,7 +1122,7 @@ const agent2 = createAgent({
 
 // Emulate specific tools by passing tool instances
 const agent3 = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [getWeather, sendEmail],
   middleware: [
     toolEmulatorMiddleware({
@@ -1133,7 +1133,7 @@ const agent3 = createAgent({
 
 // Use custom model for emulation
 const agent5 = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [getWeather, sendEmail],
   middleware: [
     toolEmulatorMiddleware({
@@ -1160,7 +1160,7 @@ Manage conversation context by clearing older tool call outputs when token limit
 import { createAgent, contextEditingMiddleware, ClearToolUsesEdit } from "langchain";
 
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [],
   middleware: [
     contextEditingMiddleware({
@@ -1229,7 +1229,7 @@ The middleware applies context editing strategies when token limits are reached.
 import { createAgent, contextEditingMiddleware, ClearToolUsesEdit } from "langchain";
 
 const agent = createAgent({
-  model: "gpt-4o",
+  model: "gpt-4.1",
   tools: [searchTool, calculatorTool, databaseTool],
   middleware: [
     contextEditingMiddleware({
@@ -1269,8 +1269,8 @@ These middleware are optimized for specific LLM providers. See each provider's d
 ---
 
 <Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/middleware/built-in.mdx)
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/middleware/built-in.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Tip>

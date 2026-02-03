@@ -55,14 +55,14 @@ agent = create_agent(
 
 ## Filesystem middleware
 
-Context engineering is a main challenge in building effective agents. This is particularly difficult when using tools that return variable-length results (for example, web_search and rag), as long tool results can quickly fill your context window.
+Context engineering is a main challenge in building effective agents. This is particularly difficult when using tools that return variable-length results (for example, `web_search` and RAG), as long tool results can quickly fill your context window.
 
 `FilesystemMiddleware` provides four tools for interacting with both short-term and long-term memory:
 
-- **ls**: List the files in the filesystem
-- **read_file**: Read an entire file or a certain number of lines from a file
-- **write_file**: Write a new file to the filesystem
-- **edit_file**: Edit an existing file in the filesystem
+- `ls`: List the files in the filesystem
+- `read_file`: Read an entire file or a certain number of lines from a file
+- `write_file`: Write a new file to the filesystem
+- `edit_file`: Edit an existing file in the filesystem
 
 ```python
 from langchain.agents import create_agent
@@ -152,7 +152,7 @@ agent = create_agent(
                     "description": "This subagent can get weather in cities.",
                     "system_prompt": "Use the get_weather tool to get the weather in a city.",
                     "tools": [get_weather],
-                    "model": "gpt-4o",
+                    "model": "gpt-4.1",
                     "middleware": [],
                 }
             ],
@@ -209,8 +209,8 @@ In addition to any user-defined subagents, the main agent has access to a `gener
 ---
 
 <Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/deepagents/middleware.mdx)
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/deepagents/middleware.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Tip>

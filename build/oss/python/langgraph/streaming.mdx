@@ -80,7 +80,7 @@ for chunk in graph.stream(inputs, stream_mode="updates"):
 
 
 
-  ```output
+  ```python
   {'refineTopic': {'topic': 'ice cream and cats'}}
   {'generateJoke': {'joke': 'This is a joke about ice cream and cats'}}
   ```
@@ -296,7 +296,7 @@ class MyState:
     joke: str = ""
 
 
-model = init_chat_model(model="gpt-4o-mini")
+model = init_chat_model(model="gpt-4.1-mini")
 
 def call_model(state: MyState):
     """Call the LLM to generate a joke about a topic"""
@@ -337,9 +337,9 @@ You can associate `tags` with LLM invocations to filter the streamed tokens by L
 from langchain.chat_models import init_chat_model
 
 # model_1 is tagged with "joke"
-model_1 = init_chat_model(model="gpt-4o-mini", tags=['joke'])
+model_1 = init_chat_model(model="gpt-4.1-mini", tags=['joke'])
 # model_2 is tagged with "poem"
-model_2 = init_chat_model(model="gpt-4o-mini", tags=['poem'])
+model_2 = init_chat_model(model="gpt-4.1-mini", tags=['poem'])
 
 graph = ... # define a graph that uses these LLMs
 
@@ -366,9 +366,9 @@ async for msg, metadata in graph.astream(
   from langgraph.graph import START, StateGraph
 
   # The joke_model is tagged with "joke"
-  joke_model = init_chat_model(model="gpt-4o-mini", tags=["joke"])
+  joke_model = init_chat_model(model="gpt-4.1-mini", tags=["joke"])
   # The poem_model is tagged with "poem"
-  poem_model = init_chat_model(model="gpt-4o-mini", tags=["poem"])
+  poem_model = init_chat_model(model="gpt-4.1-mini", tags=["poem"])
 
 
   class State(TypedDict):
@@ -444,7 +444,7 @@ for msg, metadata in graph.stream(
   from langgraph.graph import START, StateGraph
   from langchain_openai import ChatOpenAI
 
-  model = ChatOpenAI(model="gpt-4o-mini")
+  model = ChatOpenAI(model="gpt-4.1-mini")
 
 
   class State(TypedDict):
@@ -623,7 +623,7 @@ for chunk in graph.stream(
   from openai import AsyncOpenAI
 
   openai_client = AsyncOpenAI()
-  model_name = "gpt-4o-mini"
+  model_name = "gpt-4.1-mini"
 
 
   async def stream_tokens(model_name: str, messages: list[dict]):
@@ -787,7 +787,7 @@ This limits LangGraph ability to automatically propagate context, and affects La
   from langgraph.graph import START, StateGraph
   from langchain.chat_models import init_chat_model
 
-  model = init_chat_model(model="gpt-4o-mini")
+  model = init_chat_model(model="gpt-4.1-mini")
 
   class State(TypedDict):
       topic: str
@@ -855,8 +855,8 @@ This limits LangGraph ability to automatically propagate context, and affects La
 ---
 
 <Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/streaming.mdx)
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/streaming.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Tip>

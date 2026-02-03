@@ -10,9 +10,9 @@ This will help you get started with vLLM [chat models](/oss/python/langchain/mod
 
 ### Integration details
 
-| Class | Package | Local | Serializable | JS support | Downloads | Version |
-| :--- | :--- | :---: | :---: |  :---: | :---: | :---: |
-| [ChatOpenAI](https://python.langchain.com/api_reference/openai/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html) | [langchain_openai](https://python.langchain.com/api_reference/openai/) | ✅ | beta | ❌ | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain_openai?style=flat-square&label=%20) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain_openai?style=flat-square&label=%20) |
+| Class | Package | Serializable | JS support | Downloads | Version |
+| :--- | :--- | :---: |  :---: | :---: | :---: |
+| [ChatOpenAI](https://python.langchain.com/api_reference/openai/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html) | [langchain_openai](https://python.langchain.com/api_reference/openai/) | beta | ❌ | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain_openai?style=flat-square&label=%20) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain_openai?style=flat-square&label=%20) |
 
 ### Model features
 
@@ -49,11 +49,6 @@ Now we can instantiate our model object and generate chat completions:
 
 ```python
 from langchain.messages import HumanMessage, SystemMessage
-from langchain_core.prompts.chat import (
-    ChatPromptTemplate,
-    HumanMessagePromptTemplate,
-    SystemMessagePromptTemplate,
-)
 from langchain_openai import ChatOpenAI
 ```
 
@@ -62,8 +57,8 @@ inference_server_url = "http://localhost:8000/v1"
 
 llm = ChatOpenAI(
     model="mosaicml/mpt-7b",
-    openai_api_key="EMPTY",
-    openai_api_base=inference_server_url,
+    api_key="your api key goes here",
+    base_url=inference_server_url,
     max_tokens=5,
     temperature=0,
 )
@@ -83,7 +78,7 @@ messages = [
 llm.invoke(messages)
 ```
 
-```output
+```text
 AIMessage(content=' Io amo programmare', additional_kwargs={}, example=False)
 ```
 
@@ -98,8 +93,8 @@ Refer to the vLLM [documentation](https://docs.vllm.ai/en/latest/) as well.
 ---
 
 <Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/chat/vllm.mdx)
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/chat/vllm.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Tip>

@@ -62,7 +62,7 @@ export LANGSMITH_API_KEY="..."
 
 
 
-## 1. Documents and Document Loaders
+## 1. Documents and document loaders
 
 LangChain implements a [Document](https://reference.langchain.com/javascript/classes/_langchain_core.documents.Document.html) abstraction, which is intended to represent a unit of text and associated metadata. It has three attributes:
 
@@ -109,7 +109,7 @@ const loader = new PDFLoader("../../data/nke-10k-2023.pdf");
 const docs = await loader.load();
 console.log(docs.length);
 ```
-```output
+```text
 107
 ```
 
@@ -123,7 +123,7 @@ console.log(docs.length);
 ```typescript
 console.log(docs[0].pageContent.slice(0, 200));
 ```
-```output
+```text
 Table of Contents
 UNITED STATES
 SECURITIES AND EXCHANGE COMMISSION
@@ -136,7 +136,7 @@ FO
 ```typescript
 console.log(docs[0].metadata);
 ```
-```output
+```javascript
 {
   source: '../../data/nke-10k-2023.pdf',
   pdf: {
@@ -190,7 +190,7 @@ console.log(allSplits.length);
 ```
 
 
-```output
+```text
 514
 ```
 
@@ -214,7 +214,7 @@ console.log(vector1.slice(0, 10));
 ```
 
 
-```output
+```text
 Generated vectors of length 1536
 
 [-0.008586574345827103, -0.03341241180896759, -0.008936782367527485, -0.0036674530711025, 0.010564599186182022, 0.009598285891115665, -0.028587326407432556, -0.015824200585484505, 0.0030416189692914486, -0.012899317778646946]
@@ -267,7 +267,7 @@ const results1 = await vectorStore.similaritySearch(
 
 console.log(results1[0]);
 ```
-```output
+```javascript
 Document {
     pageContent: 'direct to consumer operations sell products...',
     metadata: {'page': 4, 'source': '../example_data/nke-10k-2023.pdf', 'start_index': 3125}
@@ -287,7 +287,7 @@ const results2 = await vectorStore.similaritySearchWithScore(
 
 console.log(results2[0]);
 ```
-```output
+```javascript
 Score: 0.23699893057346344
 
 Document {
@@ -312,7 +312,7 @@ const results3 = await vectorStore.similaritySearchVectorWithScore(
 
 console.log(results3[0]);
 ```
-```output
+```javascript
 Document {
     pageContent: 'FISCAL 2023 COMPARED TO FISCAL 2022...',
     metadata: {
@@ -335,7 +335,7 @@ LangChain [`VectorStore`](https://reference.langchain.com/javascript/classes/_la
 
 
 
-Vectorstores implement an `as_retriever` method that will generate a Retriever, specifically a [VectorStoreRetriever](https://python.langchain.com/api_reference/core/vectorstores/langchain_core.vectorstores.base.VectorStoreRetriever.html). These retrievers include specific `search_type` and `search_kwargs` attributes that identify what methods of the underlying vector store to call, and how to parameterize them. For instance, we can replicate the above with the following:
+Vectorstores implement an `as_retriever` method that will generate a Retriever, specifically a [`VectorStoreRetriever`](https://python.langchain.com/api_reference/core/vectorstores/langchain_core.vectorstores.base.VectorStoreRetriever.html). These retrievers include specific `search_type` and `search_kwargs` attributes that identify what methods of the underlying vector store to call, and how to parameterize them. For instance, we can replicate the above with the following:
 
 
 ```typescript
@@ -351,7 +351,7 @@ await retriever.batch([
   "What was Nike's revenue in 2023?",
 ]);
 ```
-```output
+```javascript
 [
     [Document {
         metadata: {'page': 4, 'source': '../example_data/nke-10k-2023.pdf', 'start_index': 3125},
@@ -394,8 +394,8 @@ For more on RAG, see:
 ---
 
 <Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/knowledge-base.mdx)
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/knowledge-base.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Tip>

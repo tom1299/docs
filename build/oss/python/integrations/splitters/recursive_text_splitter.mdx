@@ -37,7 +37,7 @@ texts = text_splitter.create_documents([state_of_the_union])
 print(texts[0])
 print(texts[1])
 ```
-```output
+```python
 page_content='Madam Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and'
 page_content='of Congress and the Cabinet. Justices of the Supreme Court. My fellow Americans.'
 ```
@@ -46,7 +46,7 @@ page_content='of Congress and the Cabinet. Justices of the Supreme Court. My fel
 print(text_splitter.split_text(state_of_the_union)[:2])
 ```
 
-```output
+```python
 ['Madam Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and',
  'of Congress and the Cabinet. Justices of the Supreme Court. My fellow Americans.']
 ```
@@ -94,8 +94,8 @@ text_splitter = RecursiveCharacterTextSplitter(
 ---
 
 <Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/integrations/splitters/recursive_text_splitter.mdx)
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/integrations/splitters/recursive_text_splitter.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Tip>

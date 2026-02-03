@@ -437,7 +437,7 @@ async with client.session("server_name") as session:
 
 ## Advanced features
 
-### Tool Interceptors
+### Tool interceptors
 
 MCP servers run as separate processes—they can't access LangGraph runtime information like the [store](/oss/python/langgraph/persistence#memory-store), [context](/oss/python/langchain/context-engineering), or agent state. **Interceptors bridge this gap** by giving you access to this runtime context during MCP tool execution.
 
@@ -488,7 +488,7 @@ When MCP tools are used within a LangChain agent (via `create_agent`), intercept
         tool_interceptors=[inject_user_context],
     )
     tools = await client.get_tools()
-    agent = create_agent("gpt-4o", tools, context_schema=Context)
+    agent = create_agent("gpt-4.1", tools, context_schema=Context)
 
     # Invoke with user context
     result = await agent.ainvoke(
@@ -541,7 +541,7 @@ When MCP tools are used within a LangChain agent (via `create_agent`), intercept
     )
     tools = await client.get_tools()
     agent = create_agent(
-        "gpt-4o",
+        "gpt-4.1",
         tools,
         context_schema=Context,
         store=InMemoryStore()
@@ -960,8 +960,8 @@ ElicitResult(action="cancel")
 ---
 
 <Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/mcp.mdx)
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/mcp.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Tip>

@@ -9,6 +9,10 @@ This guide walks you through creating your first deep agent with planning, file 
 
 Before you begin, make sure you have an API key from a model provider (e.g., Anthropic, OpenAI).
 
+<Note>
+    Deep agents require a model that supports [tool calling](/oss/python/concepts/tool-calling). See [customization](/oss/python/deepagents/customization#model) for how to configure your model.
+</Note>
+
 ### Step 1: Install dependencies
 
 <CodeGroup>
@@ -17,16 +21,18 @@ Before you begin, make sure you have an API key from a model provider (e.g., Ant
     ```
 
     ```bash uv
+    uv init
     uv add deepagents tavily-python
-    ```
-
-    ```bash poetry
-    poetry add deepagents tavily-python
+    uv sync
     ```
 </CodeGroup>
 
 
 
+
+<Note>
+    This guide uses [Tavily](https://tavily.com/) as an example search provider, but you can substitute any search API (e.g., DuckDuckGo, SerpAPI, Brave Search).
+</Note>
 
 ### Step 2: Set up your API keys
 
@@ -107,6 +113,10 @@ Your deep agent automatically:
 4. **Spawned subagents** (if needed): Delegated complex subtasks to specialized subagents
 5. **Synthesized a report**: Compiled findings into a coherent response
 
+## Examples
+
+For agents, patterns, and applications you can build with Deep Agents, see [Examples](https://github.com/langchain-ai/deepagents/tree/master/examples).
+
 ## Next steps
 
 Now that you've built your first deep agent:
@@ -119,8 +129,8 @@ Now that you've built your first deep agent:
 ---
 
 <Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/deepagents/quickstart.mdx)
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/deepagents/quickstart.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Tip>

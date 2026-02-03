@@ -225,14 +225,14 @@ docs = loader.load()
 assert len(docs) == 1
 print(f"Total characters: {len(docs[0].page_content)}")
 ```
-```output
+```text
 Total characters: 43131
 ```
 
 ```python
 print(docs[0].page_content[:500])
 ```
-```output
+```text
       LLM Powered Autonomous Agents
 
 Date: June 23, 2023  |  Estimated Reading Time: 31 min  |  Author: Lilian Weng
@@ -271,7 +271,7 @@ all_splits = text_splitter.split_documents(docs)
 
 print(f"Split blog post into {len(all_splits)} sub-documents.")
 ```
-```output
+```text
 Split blog post into 66 sub-documents.
 ```
 
@@ -298,7 +298,7 @@ document_ids = vector_store.add_documents(documents=all_splits)
 
 print(document_ids[:3])
 ```
-```output
+```python
 ['07c18af6-ad58-479a-bfb1-d508033f9c64', '9000bf8e-1993-446f-8d4d-f4e507ba4b8f', 'ba3b5d14-bed9-4f5f-88be-44c88aedc2e6']
 ```
 
@@ -317,7 +317,7 @@ print(document_ids[:3])
 
 This completes the **Indexing** portion of the pipeline. At this point we have a query-able vector store containing the chunked contents of our blog post. Given a user question, we should ideally be able to return the snippets of the blog post that answer the question.
 
-## 2. Retrieval and Generation
+## 2. Retrieval and generation
 
 RAG applications commonly work as follows:
 
@@ -585,8 +585,8 @@ Now that we've implemented a simple RAG application via [`create_agent`](https:/
 ---
 
 <Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/rag.mdx)
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langchain/rag.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Tip>

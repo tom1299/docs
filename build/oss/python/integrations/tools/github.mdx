@@ -91,7 +91,7 @@ for tool in tools:
     print(tool.name)
 ```
 
-```output
+```text
 Get Issues
 Get Issue
 Comment on Issue
@@ -163,7 +163,7 @@ We will need a LLM or chat model:
 
 from langchain_openai import ChatOpenAI
 
-llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+llm = ChatOpenAI(model="gpt-4.1-mini", temperature=0)
 ```
 
 Initialize the agent with a subset of tools:
@@ -192,7 +192,7 @@ for event in events:
     event["messages"][-1].pretty_print()
 ```
 
-```output
+```text
 ================================ Human Message =================================
 
 What is the title of issue 24888?
@@ -220,8 +220,8 @@ For detailed documentation of all `GithubToolkit` features and configurations he
 ---
 
 <Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/github.mdx)
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/github.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Tip>

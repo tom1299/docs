@@ -33,7 +33,7 @@ os.environ["COZE_API_BASE"] = "YOUR_API_BASE"
 chat([HumanMessage(content="什么是扣子(coze)")])
 ```
 
-```output
+```text
 AIMessage(content='为你找到关于coze的信息如下：
 
 Coze是一个由字节跳动推出的AI聊天机器人和应用程序编辑开发平台。
@@ -43,7 +43,7 @@ Coze是一个由字节跳动推出的AI聊天机器人和应用程序编辑开�
 国际版使用的模型比国内版更强大。')
 ```
 
-## Chat with Coze Streaming
+## Chat with coze streaming
 
 ```python
 chat = ChatCoze(
@@ -60,15 +60,15 @@ chat = ChatCoze(
 chat([HumanMessage(content="什么是扣子(coze)")])
 ```
 
-```output
+```text
 AIMessageChunk(content='为你查询到Coze是一个由字节跳动推出的AI聊天机器人和应用程序编辑开发平台。')
 ```
 
 ---
 
 <Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/chat/coze.mdx)
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/chat/coze.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Tip>

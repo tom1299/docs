@@ -64,7 +64,7 @@ If an assistant requires synchronous blocking operations, set [`BG_JOB_ISOLATED_
 
 Minimize redundant checkpointing by setting [`durability`](/oss/python/langgraph/durable-execution#durability-modes) to the minimum value necessary to ensure your data is durable.
 
-The default durability mode is `"async", meaning checkpoints are written after each step asynchronously. If an assistant needs to persist only the final state of the run, `durability` can be set to `"exit"`, storing only the final state of the run. This can be set when creating the run:
+The default durability mode is `"async"`, meaning checkpoints are written after each step asynchronously. If an assistant needs to persist only the final state of the run, `durability` can be set to `"exit"`, storing only the final state of the run. This can be set when creating the run:
 
 ```python
 from langgraph_sdk import get_client
@@ -405,8 +405,8 @@ Ensure that your deployment environment has sufficient resources to scale to the
 ---
 
 <Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/langsmith/agent-server-scale.mdx)
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/langsmith/agent-server-scale.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Tip>

@@ -30,9 +30,9 @@ For more information on accessing the llm models through this api, check out the
 
 ### Model features
 
-| JSON mode | [Image input](/oss/python/langchain/messages#multimodal) | Audio input | Video input | [Token-level streaming](/oss/python/langchain/streaming/) | Native async | [Token usage](/oss/python/langchain/models#token-usage) | [Logprobs](/oss/python/langchain/models#log-probabilities) |
-| :---: | :---: |  :---: | :---: | :---: | :---: | :---: | :---: |
-| ❌ | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ |
+| [Image input](/oss/python/langchain/messages#multimodal) | Audio input | Video input | [Token-level streaming](/oss/python/langchain/streaming/) | Native async | [Token usage](/oss/python/langchain/models#token-usage) | [Logprobs](/oss/python/langchain/models#log-probabilities) |
+| :---: |  :---: | :---: | :---: | :---: | :---: | :---: |
+| ✅ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ |
 
 ## Setup
 
@@ -88,7 +88,7 @@ prompt = "# Function that does quicksort written in Rust without comments:"
 print(llm.invoke(prompt))
 ```
 
-## Stream, Batch, and Async
+## Stream, batch, and async
 
 These models natively support streaming, and as is the case with all LangChain LLMs they expose a batch method to handle concurrent requests, as well as async methods for invoke, stream, and batch. Below are a few examples.
 
@@ -144,8 +144,8 @@ For detailed documentation of all `NVIDIA` features and configurations head to t
 ---
 
 <Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/llms/nvidia_ai_endpoints.mdx)
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/llms/nvidia_ai_endpoints.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Tip>

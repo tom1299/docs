@@ -71,15 +71,15 @@ print(result["__interrupt__"])
 graph.invoke(Command(resume=True), config=config)
 ```
 
-
-
-
 **Key points about resuming:**
 
 - You must use the **same thread ID** when resuming that was used when the interrupt occurred
 - The value passed to `Command(resume=...)` becomes the return value of the [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) call
 - The node restarts from the beginning of the node where the [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) was called when resumed, so any code before the [`interrupt`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.interrupt) runs again
 - You can pass any JSON-serializable value as the resume value
+
+
+
 
 ## Common patterns
 
@@ -89,6 +89,52 @@ The key thing that interrupts unlock is the ability to pause execution and wait 
 - <Icon icon="pencil" /> [Review and edit](#review-and-edit-state): Let humans review and modify LLM outputs or tool calls before continuing
 - <Icon icon="wrench" /> [Interrupting tool calls](#interrupts-in-tools): Pause before executing tool calls to review and edit the tool call before execution
 - <Icon icon="shield-check" /> [Validating human input](#validating-human-input): Pause before proceeding to the next step to validate human input
+
+### Stream with human-in-the-loop (HITL) interrupts
+
+When building interactive agents with human-in-the-loop workflows, you can stream both message chunks and node updates simultaneously to provide real-time feedback while handling interrupts.
+
+Use multiple stream modes (`"messages"` and `"updates"`) with `subgraphs=True` (if subgraphs are present) to:
+- Stream AI responses in real-time as they're generated
+- Detect when the graph encounters an interrupt
+- Handle user input and resume execution seamlessly
+
+```python
+async for metadata, mode, chunk in graph.astream(
+    initial_input,
+    stream_mode=["messages", "updates"],
+    subgraphs=True,
+    config=config
+):
+    if mode == "messages":
+        # Handle streaming message content
+        msg, _ = chunk
+        if isinstance(msg, AIMessageChunk) and msg.content:
+            # Display content in real-time
+            display_streaming_content(msg.content)
+    
+    elif mode == "updates":
+        # Check for interrupts
+        if "__interrupt__" in chunk:
+            # Stop streaming display
+            interrupt_info = chunk["__interrupt__"][0].value
+            
+            # Handle user input
+            user_response = get_user_input(interrupt_info)
+            
+            # Resume graph with updated input
+            initial_input = Command(resume=user_response)
+            break
+        
+        else:
+            # Track node transitions
+            current_node = list(chunk.keys())[0]
+```
+
+- **`stream_mode=["messages", "updates"]`**: Enables dual streaming of both message chunks and graph state updates
+- **`subgraphs=True`**: Required for interrupt detection in nested graphs
+- **`"__interrupt__"` detection**: Signals when human input is needed
+- **`Command(resume=...)`**: Resumes graph execution with user-provided data
 
 ### Approve or reject
 
@@ -838,17 +884,17 @@ To debug and test a graph, you can use static interrupts as breakpoints to step 
     </Tab>
 </Tabs>
 
-### Using LangGraph Studio
+### Using LangSmith Studio
 
-You can use [LangGraph Studio](/langsmith/studio) to set static interrupts in your graph in the UI before running the graph. You can also use the UI to inspect the graph state at any point in the execution.
+You can use [LangSmith Studio](/langsmith/studio) to set static interrupts in your graph in the UI before running the graph. You can also use the UI to inspect the graph state at any point in the execution.
 
 ![image](/oss/images/static-interrupt.png)
 
 ---
 
 <Callout icon="pen-to-square" iconType="regular">
-    [Edit the source of this page on GitHub.](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/interrupts.mdx)
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/langgraph/interrupts.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
 <Tip icon="terminal" iconType="regular">
-    [Connect these docs programmatically](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
 </Tip>
