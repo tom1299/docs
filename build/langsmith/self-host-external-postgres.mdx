@@ -22,7 +22,7 @@ For cloud-specific IAM/Workload Identity authentication, refer to the [IAM authe
   * [Google Cloud SQL](https://cloud.google.com/curated-resources/cloud-sql#section-1)
   * [Azure Database for PostgreSQL](https://azure.microsoft.com/en-us/products/postgresql#features)
 
-* Note: We only officially support PostgreSQL versions >= 14.
+* Note: We only officially support PostgreSQL 14 or later.
 
 * We support password and [IAM/Workload Identity](#iam-authentication) authentication.
 
@@ -44,7 +44,7 @@ You will need to provide a connection string to your PostgreSQL database. This c
 * Port
 * Database
 * Username
-* Password (Make sure to url encode this if there are any special characters) - **Note:** When using IAM authentication, the password is not required in the connection string. More below.
+* Password (Make sure to URL encode this if there are any special characters) - **Note:** When using IAM authentication, the password is not required in the connection string. More below.
 * URL params
 
 This will take the form of:
@@ -59,7 +59,7 @@ An example connection string might look like:
 myuser:mypassword@myhost:5432/mydatabase?sslmode=disable
 ```
 
-Without url parameters, the connection string would look like:
+Without URL parameters, the connection string would look like:
 
 ```
 myuser:mypassword@myhost:5432/mydatabase
@@ -73,9 +73,7 @@ my-workload-identity@myhost:5432/mydatabase?sslmode=require
 
 ## Configuration
 
-With your connection string in hand, you can configure your LangSmith instance to use an external PostgreSQL database. You can do this by modifying the `values` file for your LangSmith Helm Chart installation or the `.env` file for your Docker installation.
-
-<CodeGroup>
+With your connection string in hand, you can configure your LangSmith instance to use an external PostgreSQL database. You can do this by modifying the `values` file for your LangSmith Helm Chart installation.
 
 ```yaml Helm
 postgres:
@@ -83,13 +81,6 @@ postgres:
     enabled: true
     connectionUrl: "Your connection url"
 ```
-
-```bash Docker
-# In your .env file
-POSTGRES_DATABASE_URI="Your connection url"
-```
-
-</CodeGroup>
 
 Once configured, you should be able to reinstall your LangSmith instance. If everything is configured correctly, your LangSmith instance should now be using your external PostgreSQL database.
 
@@ -210,6 +201,8 @@ IAM authentication only handles connection authentication. You may still need to
 <Tabs>
   <Tab title="AWS">
 
+<a id="amazon-rds"></a>
+
 ### Amazon RDS IAM authentication
 
 Amazon RDS supports [IAM database authentication](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.html), which allows you to authenticate to your PostgreSQL instance using AWS IAM credentials instead of database passwords.
@@ -254,7 +247,7 @@ IAM authentication requires TLS. You must include `sslmode=require` in your conn
 
 You must apply the ServiceAccount annotations required by AWS IRSA to all LangSmith components that connect to PostgreSQL:
 
-**Deployments:** `backend`, `queue`, `platformBackend`, `hostBackend`
+**Deployments:** `backend`, `queue`, `platformBackend`, `hostBackend`, `ingestQueue`
 
 **Jobs:** `migrations`, `authBootstrap`, `feedbackConfigMigration`, `feedbackDataMigration`, `e2eTest`
 
@@ -284,12 +277,19 @@ hostBackend:
   serviceAccount:
     annotations:
       eks.amazonaws.com/role-arn: "arn:aws:iam::<account-id>:role/<role-name>"
+
+ingestQueue:
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: "arn:aws:iam::<account-id>:role/<role-name>"
 ```
 
 See the [Helm values reference](https://github.com/langchain-ai/helm/blob/main/charts/langsmith/values.yaml) for the full list of configurable services.
 
   </Tab>
   <Tab title="GCP">
+
+<a id="google-cloud-sql"></a>
 
 ### Cloud SQL IAM authentication
 
@@ -335,7 +335,7 @@ IAM authentication requires TLS. You must include `sslmode=require` in your conn
 
 You must apply the ServiceAccount annotations required by GCP Workload Identity to all LangSmith components that connect to PostgreSQL:
 
-**Deployments:** `backend`, `queue`, `platformBackend`, `hostBackend`
+**Deployments:** `backend`, `queue`, `platformBackend`, `hostBackend`, `ingestQueue`
 
 **Jobs:** `migrations`, `authBootstrap`, `feedbackConfigMigration`, `feedbackDataMigration`, `e2eTest`
 
@@ -365,12 +365,19 @@ hostBackend:
   serviceAccount:
     annotations:
       iam.gke.io/gcp-service-account: "<service-account>@<project>.iam.gserviceaccount.com"
+
+ingestQueue:
+  serviceAccount:
+    annotations:
+      iam.gke.io/gcp-service-account: "<service-account>@<project>.iam.gserviceaccount.com"
 ```
 
 See the [Helm values reference](https://github.com/langchain-ai/helm/blob/main/charts/langsmith/values.yaml) for the full list of configurable services.
 
   </Tab>
   <Tab title="Azure">
+
+<a id="azure-database-for-postgresql"></a>
 
 ### Azure Database for PostgreSQL with Microsoft Entra authentication
 
@@ -416,7 +423,7 @@ IAM authentication requires TLS. You must include `sslmode=require` in your conn
 
 You must apply the ServiceAccount annotations and pod labels required by Azure Workload Identity to all LangSmith components that connect to PostgreSQL:
 
-**Deployments:** `backend`, `queue`, `platformBackend`, `hostBackend`
+**Deployments:** `backend`, `queue`, `platformBackend`, `hostBackend`, `ingestQueue`
 
 **Jobs:** `migrations`, `authBootstrap`, `feedbackConfigMigration`, `feedbackDataMigration`, `e2eTest`
 
@@ -461,6 +468,14 @@ hostBackend:
   deployment:
     labels:
       azure.workload.identity/use: "true"
+
+ingestQueue:
+  serviceAccount:
+    annotations:
+      azure.workload.identity/client-id: "<managed-identity-client-id>"
+  deployment:
+    labels:
+      azure.workload.identity/use: "true"
 ```
 
 See the [Helm values reference](https://github.com/langchain-ai/helm/blob/main/charts/langsmith/values.yaml) for the full list of configurable services.
@@ -470,9 +485,11 @@ See the [Helm values reference](https://github.com/langchain-ai/helm/blob/main/c
 
 ---
 
-<Callout icon="pen-to-square" iconType="regular">
+<div className="source-links">
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to your agent of choice via MCP for real-time answers.
+</Callout>
+<Callout icon="edit">
     [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/langsmith/self-host-external-postgres.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
 </Callout>
-<Tip icon="terminal" iconType="regular">
-    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
-</Tip>
+</div>
