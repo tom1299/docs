@@ -26834,8 +26834,8 @@
             "schema": {
               "type": "integer",
               "default": 20,
-              "minimum": 1,
               "maximum": 100,
+              "minimum": 1,
               "title": "Limit"
             }
           },
@@ -28216,11 +28216,11 @@
             "in": "query",
             "schema": {
               "type": "string",
+              "default": "forward",
               "enum": [
                 "forward",
                 "backward"
               ],
-              "default": "forward",
               "title": "Direction"
             }
           }
@@ -29448,10 +29448,10 @@
             "style": "form",
             "explode": false,
             "schema": {
-              "type": "array",
               "items": {
                 "type": "string"
               },
+              "type": "array",
               "title": "Tag Value Id"
             }
           },
@@ -29471,10 +29471,10 @@
             "style": "form",
             "explode": false,
             "schema": {
-              "type": "array",
               "items": {
                 "type": "string"
               },
+              "type": "array",
               "title": "Resource Id"
             }
           },
@@ -29688,10 +29688,10 @@
             "style": "form",
             "explode": false,
             "schema": {
-              "type": "array",
               "items": {
                 "type": "string"
               },
+              "type": "array",
               "title": "Evaluator Ids"
             }
           },
@@ -29822,10 +29822,10 @@
             "style": "form",
             "explode": false,
             "schema": {
-              "type": "array",
               "items": {
                 "type": "string"
               },
+              "type": "array",
               "title": "Resource Id"
             }
           },
@@ -29854,10 +29854,10 @@
             "style": "form",
             "explode": false,
             "schema": {
-              "type": "array",
               "items": {
                 "type": "string"
               },
+              "type": "array",
               "title": "Tag Value Id"
             }
           },
@@ -31659,7 +31659,6 @@
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "array",
               "items": {
                 "enum": [
                   0,
@@ -31669,6 +31668,7 @@
                 ],
                 "type": "integer"
               },
+              "type": "array",
               "title": "Severity Exact"
             }
           },
@@ -31679,7 +31679,6 @@
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "array",
               "items": {
                 "enum": [
                   "fixing",
@@ -31688,6 +31687,7 @@
                 ],
                 "type": "string"
               },
+              "type": "array",
               "title": "Activity"
             }
           },
@@ -34084,10 +34084,10 @@
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "array",
               "items": {
                 "type": "string"
               },
+              "type": "array",
               "title": "Name Like"
             }
           },
@@ -34098,10 +34098,10 @@
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "array",
               "items": {
                 "type": "string"
               },
+              "type": "array",
               "title": "Email Like"
             }
           },
@@ -34112,10 +34112,10 @@
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "array",
               "items": {
                 "type": "string"
               },
+              "type": "array",
               "title": "Workspace Name Like"
             }
           },
@@ -34126,10 +34126,10 @@
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "array",
               "items": {
                 "type": "string"
               },
+              "type": "array",
               "title": "Organization Role Like"
             }
           },
@@ -34140,10 +34140,10 @@
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "array",
               "items": {
                 "type": "string"
               },
+              "type": "array",
               "title": "Workspace Role Like"
             }
           }
@@ -34366,10 +34366,10 @@
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "array",
               "items": {
                 "type": "string"
               },
+              "type": "array",
               "title": "Access Policy Ids"
             }
           }
@@ -37078,10 +37078,10 @@
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "array",
               "items": {
                 "type": "string"
               },
+              "type": "array",
               "title": "Selects"
             }
           }
@@ -37175,10 +37175,10 @@
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "array",
               "items": {
                 "type": "string"
               },
+              "type": "array",
               "title": "Selects"
             }
           }
@@ -37269,10 +37269,10 @@
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "array",
               "items": {
                 "type": "string"
               },
+              "type": "array",
               "title": "Selects"
             }
           },
@@ -37403,10 +37403,10 @@
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "array",
               "items": {
                 "type": "string"
               },
+              "type": "array",
               "title": "Selects"
             }
           }
@@ -37526,10 +37526,10 @@
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "array",
               "items": {
                 "type": "string"
               },
+              "type": "array",
               "title": "Selects"
             }
           }
@@ -37938,7 +37938,6 @@
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "array",
               "items": {
                 "enum": [
                   "ID",
@@ -37990,6 +37989,7 @@
                 ],
                 "type": "string"
               },
+              "type": "array",
               "title": "Selects"
             }
           },
@@ -38517,10 +38517,10 @@
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "array",
               "items": {
                 "type": "string"
               },
+              "type": "array",
               "title": "Tag Value Id"
             }
           },
@@ -38540,10 +38540,10 @@
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "array",
               "items": {
                 "type": "string"
               },
+              "type": "array",
               "title": "Label"
             }
           },
@@ -40335,10 +40335,10 @@
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "array",
               "items": {
                 "type": "string"
               },
+              "type": "array",
               "title": "Label"
             }
           },
@@ -40851,10 +40851,10 @@
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "array",
               "items": {
                 "type": "string"
               },
+              "type": "array",
               "title": "Resource Ids"
             }
           },
@@ -40865,8 +40865,8 @@
             "schema": {
               "type": "integer",
               "default": 20,
-              "minimum": 1,
               "maximum": 100,
+              "minimum": 1,
               "title": "Page Size"
             }
           },
@@ -40876,11 +40876,11 @@
             "in": "query",
             "schema": {
               "type": "string",
+              "default": "HOUR",
               "enum": [
                 "HOUR",
                 "RESOURCE"
               ],
-              "default": "HOUR",
               "title": "Granularity"
             }
           },
@@ -42578,7 +42578,6 @@
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "array",
               "items": {
                 "enum": [
                   "TURNS",
@@ -42601,6 +42600,7 @@
                 ],
                 "type": "string"
               },
+              "type": "array",
               "title": "Selects"
             }
           },
@@ -42764,8 +42764,8 @@
             "schema": {
               "type": "integer",
               "default": 20,
-              "minimum": 1,
               "maximum": 100,
+              "minimum": 1,
               "title": "Page Size"
             }
           },
@@ -42791,7 +42791,6 @@
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "array",
               "items": {
                 "enum": [
                   "THREAD_ID",
@@ -42822,6 +42821,7 @@
                 ],
                 "type": "string"
               },
+              "type": "array",
               "title": "Selects"
             }
           },
@@ -43197,7 +43197,6 @@
             "style": "form",
             "explode": true,
             "schema": {
-              "type": "array",
               "items": {
                 "enum": [
                   "ID",
@@ -43249,6 +43248,7 @@
                 ],
                 "type": "string"
               },
+              "type": "array",
               "title": "Selects"
             }
           }
@@ -45268,8 +45268,8 @@
             "schema": {
               "type": "integer",
               "default": 50,
-              "minimum": 1,
               "maximum": 100,
+              "minimum": 1,
               "title": "Limit"
             }
           },
@@ -46220,6 +46220,303 @@
         "x-hidden": true
       }
     },
+    "/v1/fleet/usage/agents": {
+      "get": {
+        "description": "Returns the same agent cost report as the Fleet usage UI. Costs are estimates in USD from recorded traces, not invoice totals. Requires `fleet:read-admin-config`. Keep the time window and sorting unchanged across pages. Results are live: late traces or cost updates can move rows between pages; pagination does not provide a frozen snapshot.",
+        "tags": [
+          "usage"
+        ],
+        "summary": "List fleet agent costs",
+        "parameters": [
+          {
+            "description": "Items per page (1-100, default 20)",
+            "name": "page_size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Page Size"
+            }
+          },
+          {
+            "description": "Opaque cursor from the previous response; omit for the first page",
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "title": "Cursor"
+            }
+          },
+          {
+            "description": "Start of cost window (RFC 3339)",
+            "name": "start_time",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Start Time"
+            }
+          },
+          {
+            "description": "End of cost window (RFC 3339)",
+            "name": "end_time",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "title": "End Time"
+            }
+          },
+          {
+            "description": "Sort field",
+            "name": "sort_by",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "cost",
+              "enum": [
+                "cost",
+                "runs",
+                "last_used",
+                "first_used"
+              ],
+              "title": "Sort By"
+            }
+          },
+          {
+            "description": "Sort direction",
+            "name": "sort_order",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "desc",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "title": "Sort Order"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/usage.AgentUsagePage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/httperr.ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/httperr.ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/httperr.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/httperr.ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "API Key": [],
+            "Tenant ID": []
+          },
+          {
+            "Bearer Auth": [],
+            "Tenant ID": []
+          }
+        ],
+        "x-public": true,
+        "x-hidden": true
+      }
+    },
+    "/v1/fleet/usage/users": {
+      "get": {
+        "description": "Returns the same user cost report as the Fleet usage UI, grouped by recorded user email. Runs without a user email are omitted. Costs are estimates in USD from recorded traces, not invoice totals. Requires `fleet:read-admin-config`. Keep the time window and sorting unchanged across pages. Results are live: late traces or cost updates can move rows between pages; pagination does not provide a frozen snapshot.",
+        "tags": [
+          "usage"
+        ],
+        "summary": "List fleet user costs",
+        "parameters": [
+          {
+            "description": "Items per page (1-100, default 20)",
+            "name": "page_size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Page Size"
+            }
+          },
+          {
+            "description": "Opaque cursor from the previous response; omit for the first page",
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "title": "Cursor"
+            }
+          },
+          {
+            "description": "Start of cost window (RFC 3339)",
+            "name": "start_time",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Start Time"
+            }
+          },
+          {
+            "description": "End of cost window (RFC 3339)",
+            "name": "end_time",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "title": "End Time"
+            }
+          },
+          {
+            "description": "Sort field",
+            "name": "sort_by",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "cost",
+              "enum": [
+                "cost",
+                "runs",
+                "agent_count",
+                "last_used",
+                "first_used"
+              ],
+              "title": "Sort By"
+            }
+          },
+          {
+            "description": "Sort direction",
+            "name": "sort_order",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "desc",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "title": "Sort Order"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/usage.UserUsagePage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/httperr.ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/httperr.ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/httperr.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/httperr.ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "API Key": [],
+            "Tenant ID": []
+          },
+          {
+            "Bearer Auth": [],
+            "Tenant ID": []
+          }
+        ],
+        "x-public": true,
+        "x-hidden": true
+      }
+    },
     "/v1/fleet/users": {
       "get": {
         "description": "Lists members of the caller's current workspace, optionally filtered by a search string. Use this to resolve a colleague's email or full name into the user ID that agent sharing takes (`permissions.shared_users`). A member's `name` in the response can come from a separately configured display name, which `search` does not match. The tenant is taken from the X-Tenant-Id header. Members your organization hides from other members are omitted.",
@@ -46244,8 +46541,8 @@
             "schema": {
               "type": "integer",
               "default": 20,
-              "minimum": 1,
               "maximum": 100,
+              "minimum": 1,
               "title": "Page Size"
             }
           },
@@ -48861,6 +49158,7 @@
           "update_mcp_server",
           "delete_mcp_server",
           "register_mcp_server_oauth",
+          "create_mcp_credential_session",
           "invoke_mcp_server",
           "invoke_mcp_gateway",
           "create_mcp_gateway",
@@ -51374,7 +51672,8 @@
           "thread",
           "all_messages",
           "human_ai_pairs",
-          "first_human_last_ai"
+          "first_human_last_ai",
+          "trajectory"
         ],
         "title": "CodeEvaluatorInputType",
         "description": "Input provided to a code evaluator."
@@ -67021,6 +67320,59 @@
         "title": "QueryParamsForPublicRunSchema",
         "description": "Query params for public run endpoints."
       },
+      "QuerySessionFeedbackConfigIds": {
+        "properties": {
+          "session_ids": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "maxItems": 100,
+            "minItems": 1,
+            "title": "Session Ids"
+          },
+          "feedback_keys": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "maxItems": 500
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Feedback Keys"
+          },
+          "cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cursor"
+          },
+          "page_size": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Page Size",
+            "default": 20
+          }
+        },
+        "type": "object",
+        "required": [
+          "session_ids"
+        ],
+        "title": "QuerySessionFeedbackConfigIds",
+        "description": "Experiments, and optionally feedback keys, to list feedback config ids for."
+      },
       "QueueInfoResponse": {
         "properties": {
           "queued": {
@@ -75013,6 +75365,73 @@
         ],
         "title": "ServiceAccountWorkspaceAssignment"
       },
+      "SessionFeedbackConfigIds": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Session Id"
+          },
+          "feedback_key": {
+            "type": "string",
+            "title": "Feedback Key"
+          },
+          "is_session_level": {
+            "type": "boolean",
+            "title": "Is Session Level"
+          },
+          "feedback_config_ids": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "title": "Feedback Config Ids"
+          },
+          "has_scores_without_config": {
+            "type": "boolean",
+            "title": "Has Scores Without Config"
+          }
+        },
+        "type": "object",
+        "required": [
+          "session_id",
+          "feedback_key",
+          "is_session_level",
+          "feedback_config_ids",
+          "has_scores_without_config"
+        ],
+        "title": "SessionFeedbackConfigIds",
+        "description": "The feedback configs an experiment's scores for one key were written against."
+      },
+      "SessionFeedbackConfigIdsPage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/SessionFeedbackConfigIds"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "next_cursor"
+        ],
+        "title": "SessionFeedbackConfigIdsPage"
+      },
       "SessionFeedbackDelta": {
         "properties": {
           "feedback_deltas": {
@@ -79222,6 +79641,18 @@
           "id": {
             "type": "string"
           },
+          "is_suspended": {
+            "type": "boolean"
+          },
+          "suspended_at": {
+            "type": "string"
+          },
+          "suspended_reason": {
+            "type": "string"
+          },
+          "suspended_status_code": {
+            "type": "integer"
+          },
           "target": {
             "type": "string",
             "enum": [
@@ -79815,8 +80246,8 @@
             "type": "boolean"
           },
           "byoc_external_id": {
-            "readOnly": true,
             "description": "ByocExternalID is the organization's assigned AWS external ID, stored only in org config.",
+            "readOnly": true,
             "anyOf": [
               {
                 "type": "string"
@@ -81776,13 +82207,15 @@
           "thread",
           "all_messages",
           "human_ai_pairs",
-          "first_human_last_ai"
+          "first_human_last_ai",
+          "trajectory"
         ],
         "x-enum-varnames": [
           "CodeEvaluatorInputThread",
           "CodeEvaluatorInputAllMessages",
           "CodeEvaluatorInputHumanAIPairs",
-          "CodeEvaluatorInputFirstHumanLastAI"
+          "CodeEvaluatorInputFirstHumanLastAI",
+          "CodeEvaluatorInputTrajectory"
         ]
       },
       "evaluators.CreateCodeEvaluatorRequest": {
@@ -82208,7 +82641,8 @@
                   "thread",
                   "all_messages",
                   "human_ai_pairs",
-                  "first_human_last_ai"
+                  "first_human_last_ai",
+                  "trajectory"
                 ]
               },
               {
@@ -89304,6 +89738,130 @@
           }
         }
       },
+      "usage.AgentUsagePage": {
+        "type": "object",
+        "required": [
+          "items",
+          "next_cursor"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/usage.PublicAgentUsage"
+            }
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "usage.PublicAgentUsage": {
+        "type": "object",
+        "required": [
+          "agent_id",
+          "first_used",
+          "last_used",
+          "run_count",
+          "total_cost"
+        ],
+        "properties": {
+          "agent_id": {
+            "type": "string"
+          },
+          "agent_name": {
+            "type": "string"
+          },
+          "first_used": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "last_used": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "model_name": {
+            "type": "string"
+          },
+          "run_count": {
+            "type": "integer"
+          },
+          "total_cost": {
+            "description": "Estimated cost in USD from recorded traces.",
+            "type": "number"
+          }
+        }
+      },
+      "usage.PublicUserUsage": {
+        "type": "object",
+        "required": [
+          "agent_count",
+          "first_used",
+          "last_used",
+          "run_count",
+          "total_cost",
+          "user_email"
+        ],
+        "properties": {
+          "agent_count": {
+            "type": "integer"
+          },
+          "first_used": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "last_used": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ls_user_id": {
+            "type": "string"
+          },
+          "run_count": {
+            "type": "integer"
+          },
+          "total_cost": {
+            "description": "Estimated cost in USD from recorded traces.",
+            "type": "number"
+          },
+          "user_email": {
+            "description": "Recorded user email used to group usage.",
+            "type": "string"
+          }
+        }
+      },
+      "usage.UserUsagePage": {
+        "type": "object",
+        "required": [
+          "items",
+          "next_cursor"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/usage.PublicUserUsage"
+            }
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
       "users.ErrorResponse": {
         "type": "object",
         "properties": {
@@ -90905,6 +91463,9 @@
     {
       "name": "productfeedback",
       "x-hidden": true
+    },
+    {
+      "name": "usage"
     }
   ]
 }
