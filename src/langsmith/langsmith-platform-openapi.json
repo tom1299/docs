@@ -5243,7 +5243,9 @@
                         "type": "null"
                       }
                     ],
-                    "title": "Outputs"
+                    "title": "Outputs",
+                    "deprecated": true,
+                    "description": "Deprecated: use reference_outputs instead."
                   },
                   "dataset_id": {
                     "format": "uuid",
@@ -5374,13 +5376,31 @@
                   "created_at": {
                     "title": "Created At",
                     "type": "string"
+                  },
+                  "reference_outputs": {
+                    "anyOf": [
+                      {
+                        "additionalProperties": true,
+                        "type": "object"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Reference Outputs"
                   }
                 },
                 "required": [
                   "dataset_id"
                 ],
                 "title": "ExampleCreate",
-                "type": "object"
+                "type": "object",
+                "not": {
+                  "required": [
+                    "outputs",
+                    "reference_outputs"
+                  ]
+                }
               }
             }
           }
@@ -5456,6 +5476,12 @@
             "application/json": {
               "schema": {
                 "items": {
+                  "not": {
+                    "required": [
+                      "outputs",
+                      "reference_outputs"
+                    ]
+                  },
                   "properties": {
                     "outputs": {
                       "anyOf": [
@@ -5467,7 +5493,9 @@
                           "type": "null"
                         }
                       ],
-                      "title": "Outputs"
+                      "title": "Outputs",
+                      "description": "Deprecated: use reference_outputs instead.",
+                      "deprecated": true
                     },
                     "dataset_id": {
                       "type": "string",
@@ -5605,6 +5633,18 @@
                         }
                       ],
                       "title": "Created At"
+                    },
+                    "reference_outputs": {
+                      "anyOf": [
+                        {
+                          "additionalProperties": true,
+                          "type": "object"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "title": "Reference Outputs"
                     }
                   },
                   "type": "object",
@@ -22636,7 +22676,7 @@
           "me"
         ],
         "summary": "Update onboarding state field",
-        "description": "Update a specific onboarding completion field for the current user.\n\nValid fields:\n- tracing_completed_at\n- lgstudio_completed_at\n- playground_completed_at\n- evaluation_completed_at\n- success_viewed_at\n- agent_platform_welcome_viewed_at\n- get_started_checklist_dismissed_at\n- agent_trace_viewed_at",
+        "description": "Update a specific onboarding completion field for the current user.\n\nValid fields:\n- tracing_completed_at\n- lgstudio_completed_at\n- playground_completed_at\n- evaluation_completed_at\n- success_viewed_at\n- agent_platform_welcome_viewed_at\n- get_started_checklist_dismissed_at\n- agent_trace_viewed_at\n- agent_monitoring_viewed_at",
         "operationId": "update_onboarding_state_field_api_v1_me_onboarding_state__field__put",
         "security": [
           {
@@ -26780,10 +26820,10 @@
             "name": "limit",
             "in": "query",
             "schema": {
-              "maximum": 100,
               "type": "integer",
-              "minimum": 1,
               "default": 20,
+              "maximum": 100,
+              "minimum": 1,
               "title": "Limit"
             }
           },
@@ -26793,8 +26833,8 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "minimum": 0,
               "default": 0,
+              "minimum": 0,
               "title": "Offset"
             }
           },
@@ -41668,10 +41708,10 @@
             "name": "page_size",
             "in": "query",
             "schema": {
-              "maximum": 100,
               "type": "integer",
-              "minimum": 1,
               "default": 20,
+              "maximum": 100,
+              "minimum": 1,
               "title": "Page Size"
             }
           },
@@ -43567,10 +43607,10 @@
             "name": "page_size",
             "in": "query",
             "schema": {
-              "maximum": 100,
               "type": "integer",
-              "minimum": 1,
               "default": 20,
+              "maximum": 100,
+              "minimum": 1,
               "title": "Page Size"
             }
           },
@@ -46071,10 +46111,10 @@
             "name": "limit",
             "in": "query",
             "schema": {
-              "maximum": 100,
               "type": "integer",
-              "minimum": 1,
               "default": 50,
+              "maximum": 100,
+              "minimum": 1,
               "title": "Limit"
             }
           },
@@ -46083,8 +46123,8 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "minimum": 0,
               "default": 0,
+              "minimum": 0,
               "title": "Offset"
             }
           }
@@ -47038,10 +47078,10 @@
             "name": "page_size",
             "in": "query",
             "schema": {
-              "maximum": 100,
               "type": "integer",
-              "minimum": 1,
               "default": 20,
+              "maximum": 100,
+              "minimum": 1,
               "title": "Page Size"
             }
           },
@@ -47186,10 +47226,10 @@
             "name": "page_size",
             "in": "query",
             "schema": {
-              "maximum": 100,
               "type": "integer",
-              "minimum": 1,
               "default": 20,
+              "maximum": 100,
+              "minimum": 1,
               "title": "Page Size"
             }
           },
@@ -47253,6 +47293,15 @@
                 "desc"
               ],
               "title": "Sort Order"
+            }
+          },
+          {
+            "description": "Only return the user with this recorded email (case-insensitive exact match)",
+            "name": "email",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "title": "Email"
             }
           }
         ],
@@ -47344,10 +47393,10 @@
             "name": "page_size",
             "in": "query",
             "schema": {
-              "maximum": 100,
               "type": "integer",
-              "minimum": 1,
               "default": 20,
+              "maximum": 100,
+              "minimum": 1,
               "title": "Page Size"
             }
           },
@@ -49903,6 +49952,7 @@
           "create_deployment",
           "update_deployment",
           "delete_deployment",
+          "cancel_deployment_runs",
           "create_access_policy",
           "delete_access_policy",
           "list_access_policies",
@@ -49952,6 +50002,9 @@
           "trigger_forge_configuration",
           "add_annotation_queue_reviewer",
           "remove_annotation_queue_reviewer",
+          "create_custom_view",
+          "update_custom_view",
+          "delete_custom_view",
           "add_items_to_annotation_queue",
           "delete_annotation_queue_item",
           "update_annotation_queue_item",
@@ -79450,6 +79503,18 @@
             ],
             "title": "Agent Trace Viewed At"
           },
+          "agent_monitoring_viewed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Agent Monitoring Viewed At"
+          },
           "created_at": {
             "type": "string",
             "format": "date-time",
@@ -81065,8 +81130,8 @@
             "type": "boolean"
           },
           "byoc_external_id": {
-            "readOnly": true,
             "description": "ByocExternalID is the organization's assigned AWS external ID, stored only in org config.",
+            "readOnly": true,
             "anyOf": [
               {
                 "type": "string"
@@ -81588,6 +81653,7 @@
           "deployments:delete",
           "deployments:read",
           "deployments:update",
+          "deployments:cancel-runs",
           "feedback:create",
           "feedback:delete",
           "feedback:read",
@@ -81730,6 +81796,7 @@
           "DeploymentsDelete",
           "DeploymentsRead",
           "DeploymentsUpdate",
+          "DeploymentsCancelRuns",
           "FeedbackCreate",
           "FeedbackDelete",
           "FeedbackRead",
@@ -88842,6 +88909,18 @@
           "resource_type"
         ],
         "properties": {
+          "compute_standard_units": {
+            "description": "Recorded compute usage in Standard Units, as a decimal string, separate from LCU.\nNull means complete Standard compute usage is unavailable; \"0\" means known zero usage.",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "decimal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "lcu": {
             "description": "Recorded compute usage in LangSmith Compute Units (LCU), as a decimal string\nwith up to six fractional digits and trailing zeros omitted. Snapshots return \"0\".",
             "type": "string",
@@ -88864,6 +88943,18 @@
           },
           "resource_type": {
             "$ref": "#/components/schemas/sandboxes.UsageCostResourceType"
+          },
+          "storage_standard_units": {
+            "description": "Allocated storage usage in Standard Units, as a decimal string, separate from LSU.\nNull means complete Standard storage usage is unavailable; \"0\" means known zero usage.",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "decimal"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         }
       },
@@ -88874,6 +88965,18 @@
           "lsu"
         ],
         "properties": {
+          "compute_standard_units": {
+            "description": "Total compute usage in Standard Units across the entire filtered interval,\nindependent of pagination, as a decimal string, separate from LCU.\nNull means complete Standard compute usage is unavailable; \"0\" means known zero usage.",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "decimal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "lcu": {
             "type": "string",
             "format": "decimal"
@@ -88881,6 +88984,18 @@
           "lsu": {
             "type": "string",
             "format": "decimal"
+          },
+          "storage_standard_units": {
+            "description": "Total storage usage in Standard Units across the entire filtered interval,\nindependent of pagination, as a decimal string, separate from LSU.\nNull means complete Standard storage usage is unavailable; \"0\" means known zero usage.",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "decimal"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         }
       },
@@ -89497,6 +89612,10 @@
       },
       "share.CreateShareTokenRequestBody": {
         "type": "object",
+        "required": [
+          "session_id",
+          "trace_id"
+        ],
         "properties": {
           "session_id": {
             "description": "session_id is the tracing project UUID containing the trace.",
@@ -89524,6 +89643,9 @@
       },
       "share.DeleteShareTokenRequestBody": {
         "type": "object",
+        "required": [
+          "session_id"
+        ],
         "properties": {
           "session_id": {
             "description": "session_id is the tracing project UUID containing the trace.",
