@@ -8674,6 +8674,60 @@
         "x-public": true
       }
     },
+    "/api/v1/runs/rules/decision-models": {
+      "post": {
+        "tags": [
+          "run"
+        ],
+        "summary": "Create decision model rule",
+        "description": "Create a decision-model evaluator (Jev, SemIf or OpenAI Decisions) from\nits prompt and questions, and attach it to a project or dataset. Each\nquestion's key becomes a feedback key.",
+        "operationId": "create_decision_model_rule_api_v1_runs_rules_decision_models_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DecisionModelRuleCreateSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunRulesSchema"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "API Key": []
+          },
+          {
+            "Tenant ID": []
+          },
+          {
+            "Bearer Auth": []
+          }
+        ],
+        "x-public": true
+      }
+    },
     "/api/v1/runs/rules/validate": {
       "post": {
         "tags": [
@@ -27161,9 +27215,9 @@
             "name": "page_size",
             "in": "query",
             "schema": {
+              "minimum": 1,
               "default": 20,
               "maximum": 100,
-              "minimum": 1,
               "type": "integer",
               "title": "Page Size"
             }
@@ -27630,9 +27684,9 @@
             "name": "limit",
             "in": "query",
             "schema": {
+              "minimum": 1,
               "default": 20,
               "maximum": 100,
-              "minimum": 1,
               "type": "integer",
               "title": "Limit"
             }
@@ -27642,8 +27696,8 @@
             "name": "offset",
             "in": "query",
             "schema": {
-              "default": 0,
               "minimum": 0,
+              "default": 0,
               "type": "integer",
               "title": "Offset"
             }
@@ -31549,7 +31603,7 @@
         "x-public": true
       },
       "post": {
-        "description": "Creates a gateway policy for the calling organization.\n\n**policy_type** is one of `spend_cap`, `default_spend_cap`,\n`guard`, `route_config`, `model_fallback`, `rate_limit`, or `default_rate_limit`.\nThe shape of `config` depends on policy_type:\n- `spend_cap` / `default_spend_cap`, one limit:\n`{\"window\": \"hourly\"|\"daily\"|\"weekly\"|\"monthly\", \"limit_usd\": <number>}`\n- `spend_cap` / `default_spend_cap`, a limit per window:\n`{\"version\": 2, \"limits\": [{\"window\": \"hourly\"|\"daily\"|\"weekly\"|\"monthly\", \"limit_usd\": <number>}]}`\n- `guard`:\n`{\"version\": 1, \"detect\": {\"pii\": <bool>, \"secrets\": <bool>, \"custom\": [{\"pattern\": \"<regex>\"}]}, \"timeout_seconds\": <number>, \"timeout_action\": \"allow\"|\"block\"}`\n`timeout_seconds` (optional, 0.1–30) caps guard pipeline execution time; defaults to 2s. `timeout_action` defaults to `allow`.\n`detect.custom` (optional) holds at most one Go regexp (RE2 syntax) of up to 512 bytes; matching text is redacted. Avoid capture groups: if present, only the first group is redacted, wherever that text appears.\n- `route_config`:\n`{\"strategy\": \"priority_fallback\", \"triggers\": {\"status_codes\": [<int>]}, \"fallbacks\": [{\"model_configs\": [{\"model_config_id\": \"<playground-settings-uuid>\"}]}]}`\n`triggers` is required, with no default: `status_codes` must be a non-empty list (include 502 and 504 for upstream transport failures). `fallbacks` contains an entry whose `model_configs` are tried in priority order (1–5). `subject_matchers` must be a single `workspace_id` entry.\n- `model_fallback`:\n`{\"strategy\": \"priority_fallback\", \"triggers\": {\"status_codes\": [429, 502, 503, 504]}, \"chain\": {\"selector\": {\"type\": \"provider_model\", \"provider\": \"openai\", \"model\": \"gpt-4o\"}, \"candidates\": [{\"type\": \"provider_model\", \"provider\": \"openai\", \"model\": \"gpt-4o-mini\"}, {\"type\": \"model_config\", \"model_config_id\": \"<playground-settings-uuid>\"}]}}`\nOptional `ejection: {\"failure_threshold\": <1-1000>, \"cooldown_seconds\": <1-300>}` skips a candidate for `cooldown_seconds` after it fails the chain's triggers `failure_threshold` times within `cooldown_seconds`. Failures are counted per policy and candidate, only provider failures count, and success does not reset the count. The last candidate is never skipped.\n`chain.candidates` is an ordered list of 1–5 direct provider models or saved workspace model configurations. A non-empty `workspace_id` matcher is required. `provider_model` selectors are workspace-only; `alias` selectors may be narrowed by `user_id` or `api_key_id`. Provider/model selectors are unique within a workspace, while alias names are reserved across the organization and may intentionally shadow a model name.\n- `rate_limit` / `default_rate_limit`:\n`{\"version\": 1, \"limits\": [{\"metric\": \"requests\"|\"tokens\", \"window\": \"minute\"|\"hour\", \"value\": <integer>}]}`\n`limits` must be non-empty; each `metric`/`window` pair may appear at most once. `value` is 1..1000000000000000.\n\n**subject_matchers** is a list of `{key, value}` pairs. Built-in\nkeys are `organization_id`, `workspace_id`, `user_id`, `api_key_id`,\nand `run_rule_id`. Values under the same key are ORed; distinct keys\nare ANDed. A default policy uses an empty built-in matcher value so\nthe runtime materializes a child for each subject it sees. A\n`default_spend_cap` and `default_rate_limit` may add one empty custom\nmetadata key to bucket each subject by the corresponding\n`X-Gateway-*` request header; the materialized child stores both values.\n\n**action** is currently always `block`. Spend caps reject the\nrequest with 402 when the limit is hit; rate limits reject with\n429 (with a `Retry-After` hint) when a limit is exceeded; guard\npolicies redact matched content in-place before forwarding upstream.\n\n**Upsert by matchers:** for `spend_cap`, `default_spend_cap`,\n`rate_limit`, `default_rate_limit`, and `guard`, if a policy with\nthe same `subject_matchers` already exists in this organization,\nthe existing policy is updated in place instead of a duplicate\nbeing created. `id` is preserved. `route_config` and `model_fallback` do not upsert\nby matchers — name must be unique per organization (409 on\nconflict). Returns 201 either way.",
+        "description": "Creates a gateway policy for the calling organization.\n\n**policy_type** is one of `spend_cap`, `default_spend_cap`,\n`guard`, `route_config`, `model_fallback`, `rate_limit`, or `default_rate_limit`.\nThe shape of `config` depends on policy_type:\n- `spend_cap` / `default_spend_cap`, one limit:\n`{\"window\": \"hourly\"|\"daily\"|\"weekly\"|\"monthly\", \"limit_usd\": <number>}`\n- `spend_cap` / `default_spend_cap`, a limit per window:\n`{\"version\": 2, \"limits\": [{\"window\": \"hourly\"|\"daily\"|\"weekly\"|\"monthly\", \"limit_usd\": <number>}]}`\n- `guard`:\n`{\"version\": 1, \"detect\": {\"pii\": <bool>, \"secrets\": <bool>, \"custom\": [{\"pattern\": \"<regex>\"}]}, \"timeout_seconds\": <number>, \"timeout_action\": \"allow\"|\"block\"}`\n`timeout_seconds` (optional, 0.1–30) caps guard pipeline execution time; defaults to 2s. `timeout_action` defaults to `allow`.\n`detect.custom` (optional) holds at most one Go regexp (RE2 syntax) of up to 512 bytes; matching text is redacted. Avoid capture groups: if present, only the first group is redacted, wherever that text appears.\n- `route_config`:\n`{\"strategy\": \"priority_fallback\", \"triggers\": {\"status_codes\": [<int>]}, \"fallbacks\": [{\"model_configs\": [{\"model_config_id\": \"<playground-settings-uuid>\"}]}]}`\n`triggers` is required, with no default: `status_codes` must be a non-empty list (include 502 and 504 for upstream transport failures). `fallbacks` contains an entry whose `model_configs` are tried in priority order (1–5). `subject_matchers` must be a single `workspace_id` entry.\n- `model_fallback`:\n`{\"strategy\": \"priority_fallback\", \"triggers\": {\"status_codes\": [429, 502, 503, 504]}, \"chain\": {\"selector\": {\"type\": \"provider_model\", \"provider\": \"openai\", \"model\": \"gpt-4o\"}, \"candidates\": [{\"type\": \"provider_model\", \"provider\": \"openai\", \"model\": \"gpt-4o-mini\"}, {\"type\": \"model_config\", \"model_config_id\": \"<playground-settings-uuid>\"}]}}`\nOptional `ejection: {\"failure_threshold\": <1-1000>, \"cooldown_seconds\": <1-300>}` skips a candidate for `cooldown_seconds` after it fails the chain's triggers `failure_threshold` times within `cooldown_seconds`. Failures are counted per policy and candidate, only provider failures count, and success does not reset the count. The last candidate is never skipped.\n`chain.candidates` is an ordered list of 1–5 direct provider models or saved workspace model configurations. A non-empty `workspace_id` matcher is required. `provider_model` selectors are workspace-only; `alias` selectors may be narrowed by `user_id` or `api_key_id`. Provider/model selectors are unique within a workspace, while alias names are reserved across the organization and may intentionally shadow a model name.\n- `rate_limit` / `default_rate_limit`:\n`{\"version\": 1, \"limits\": [{\"metric\": \"requests\"|\"tokens\", \"window\": \"minute\"|\"hour\", \"value\": <integer>}]}`\n`limits` must be non-empty; each `metric`/`window` pair may appear at most once. `value` is 1..1000000000000000.\n\n**subject_matchers** is a list of `{key, value}` pairs. Built-in\nkeys are `organization_id`, `workspace_id`, `agent_id`,\n`agent_environment`, `user_id`, `api_key_id`, and `run_rule_id`.\nValues under the same key are ORed; distinct keys are ANDed.\n`agent_id` and `agent_environment` target requests from Agent\ndeployments and must be combined with exactly one `workspace_id`\nmatcher: `agent_id` alone targets those Agents, `agent_environment`\n(`LOCAL`, `DEVELOPMENT`, `STAGING`, or `PRODUCTION`) alone targets\nevery Agent in those environments, and both together target those\nAgents in those environments. Agent keys are\nnot supported in default policies. A default policy uses an empty built-in matcher value so\nthe runtime materializes a child for each subject it sees. A\n`default_spend_cap` and `default_rate_limit` may add one empty custom\nmetadata key to bucket each subject by the corresponding\n`X-Gateway-*` request header; the materialized child stores both values.\n\n**action** is currently always `block`. Spend caps reject the\nrequest with 402 when the limit is hit; rate limits reject with\n429 (with a `Retry-After` hint) when a limit is exceeded; guard\npolicies redact matched content in-place before forwarding upstream.\n\n**Upsert by matchers:** for `spend_cap`, `default_spend_cap`,\n`rate_limit`, `default_rate_limit`, and `guard`, if a policy with\nthe same `subject_matchers` already exists in this organization,\nthe existing policy is updated in place instead of a duplicate\nbeing created. `id` is preserved. `route_config` and `model_fallback` do not upsert\nby matchers — name must be unique per organization (409 on\nconflict). Returns 201 either way.",
         "tags": [
           "gateway-policies"
         ],
@@ -41571,9 +41625,9 @@
             "name": "page_size",
             "in": "query",
             "schema": {
+              "minimum": 1,
               "default": 20,
               "maximum": 100,
-              "minimum": 1,
               "type": "integer",
               "title": "Page Size"
             }
@@ -42649,9 +42703,9 @@
             "name": "page_size",
             "in": "query",
             "schema": {
+              "minimum": 1,
               "default": 20,
               "maximum": 100,
-              "minimum": 1,
               "type": "integer",
               "title": "Page Size"
             }
@@ -42680,13 +42734,23 @@
             }
           },
           {
-            "description": "Include usage totals across the filtered interval (RESOURCE only). Omitted when unrestricted resource access cannot be verified or the service does not support totals.",
+            "description": "Include usage totals across the filtered interval (RESOURCE only). Omitted when unrestricted resource access cannot be verified or the service does not support totals. CLI: use --format raw to show this summary.",
             "name": "include_totals",
             "in": "query",
             "schema": {
               "default": false,
               "type": "boolean",
               "title": "Include Totals"
+            }
+          },
+          {
+            "description": "Include bounded daily physical usage for the top 10 resources per metric and Other. Requires RESOURCE and include_totals. Omitted when unrestricted access or service support is unavailable. CLI: use --format raw to show this summary.",
+            "name": "include_daily",
+            "in": "query",
+            "schema": {
+              "default": false,
+              "type": "boolean",
+              "title": "Include Daily"
             }
           }
         ],
@@ -45034,9 +45098,9 @@
             "name": "page_size",
             "in": "query",
             "schema": {
+              "minimum": 1,
               "default": 20,
               "maximum": 100,
-              "minimum": 1,
               "type": "integer",
               "title": "Page Size"
             }
@@ -47498,9 +47562,9 @@
             "name": "limit",
             "in": "query",
             "schema": {
+              "minimum": 1,
               "default": 50,
               "maximum": 100,
-              "minimum": 1,
               "type": "integer",
               "title": "Limit"
             }
@@ -47509,8 +47573,8 @@
             "name": "offset",
             "in": "query",
             "schema": {
-              "default": 0,
               "minimum": 0,
+              "default": 0,
               "type": "integer",
               "title": "Offset"
             }
@@ -48465,9 +48529,9 @@
             "name": "page_size",
             "in": "query",
             "schema": {
+              "minimum": 1,
               "default": 20,
               "maximum": 100,
-              "minimum": 1,
               "type": "integer",
               "title": "Page Size"
             }
@@ -48613,9 +48677,9 @@
             "name": "page_size",
             "in": "query",
             "schema": {
+              "minimum": 1,
               "default": 20,
               "maximum": 100,
-              "minimum": 1,
               "type": "integer",
               "title": "Page Size"
             }
@@ -48780,9 +48844,9 @@
             "name": "page_size",
             "in": "query",
             "schema": {
+              "minimum": 1,
               "default": 20,
               "maximum": 100,
-              "minimum": 1,
               "type": "integer",
               "title": "Page Size"
             }
@@ -49920,6 +49984,26 @@
               }
             ],
             "title": "Is Required"
+          },
+          "required_if": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RubricItemConditions"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "visible_if": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RubricItemConditions"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "is_assertion": {
             "anyOf": [
@@ -53128,7 +53212,8 @@
                 "type": "null"
               }
             ],
-            "title": "Filter"
+            "title": "Filter",
+            "description": "LangSmith filter expression that selects the runs to export. Accepts the function-style syntax, for example eq(run_type, \"llm\"), and, on LangSmith Cloud and self-hosted versions that support it, the v2 syntax, for example run_type:llm.\nSee https://docs.langchain.com/langsmith/trace-query-syntax#filter-query-language for syntax."
           },
           "format": {
             "$ref": "#/components/schemas/BulkExportFormat",
@@ -53293,7 +53378,8 @@
                 "type": "null"
               }
             ],
-            "title": "Filter"
+            "title": "Filter",
+            "description": "LangSmith filter expression that selects the runs to export. Accepts the function-style syntax, for example eq(run_type, \"llm\"), and, on LangSmith Cloud and self-hosted versions that support it, the v2 syntax, for example run_type:llm.\nSee https://docs.langchain.com/langsmith/trace-query-syntax#filter-query-language for syntax."
           },
           "format": {
             "$ref": "#/components/schemas/BulkExportFormat",
@@ -58409,6 +58495,297 @@
         "title": "DatasetVersion",
         "description": "Dataset version schema."
       },
+      "DecisionModelQuestion": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "noul",
+              "choice",
+              "score"
+            ],
+            "title": "Type",
+            "description": "noul: a yes/no question scored 0 to 1. choice: one of the options. score: one of the levels, scored by position."
+          },
+          "instructions": {
+            "type": "string",
+            "title": "Instructions"
+          },
+          "yes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Yes",
+            "description": "What a yes answer means. noul only; set both yes and no, or neither."
+          },
+          "no": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "No",
+            "description": "What a no answer means. noul only; set both yes and no, or neither."
+          },
+          "options": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Options",
+            "description": "2 to 255 option names, or names mapped to descriptions. choice only."
+          },
+          "levels": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Levels",
+            "description": "2 to 10 level names, lowest first. score only."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "type",
+          "instructions"
+        ],
+        "title": "DecisionModelQuestion",
+        "description": "A question a decision model answers about each run."
+      },
+      "DecisionModelRuleCreateSchema": {
+        "properties": {
+          "display_name": {
+            "type": "string",
+            "title": "Display Name"
+          },
+          "session_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Session Id",
+            "description": "The tracing project to evaluate."
+          },
+          "dataset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dataset Id",
+            "description": "The dataset whose experiments to evaluate."
+          },
+          "prompt": {
+            "items": {
+              "prefixItems": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "string"
+                }
+              ],
+              "type": "array",
+              "maxItems": 2,
+              "minItems": 2
+            },
+            "type": "array",
+            "title": "Prompt",
+            "description": "The prompt the model reads, as (role, template) pairs."
+          },
+          "template_format": {
+            "type": "string",
+            "enum": [
+              "mustache",
+              "f-string"
+            ],
+            "title": "Template Format",
+            "default": "mustache"
+          },
+          "variable_mapping": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variable Mapping",
+            "description": "Maps the prompt's variables to run fields."
+          },
+          "questions": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/DecisionModelQuestion"
+            },
+            "type": "object",
+            "title": "Questions",
+            "description": "The questions, keyed by feedback key, in the order to ask them."
+          },
+          "provider": {
+            "type": "string",
+            "enum": [
+              "typesafe",
+              "typesafe_compatible",
+              "openai_decisions"
+            ],
+            "title": "Provider",
+            "description": "typesafe for Jev and SemIf, typesafe_compatible for a TypeSafe-compatible endpoint, or openai_decisions.",
+            "default": "typesafe"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model",
+            "description": "Defaults to jev-latest for typesafe and gpt-6-luna for openai_decisions. Use semif-qwen3.5-4b for SemIf."
+          },
+          "base_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Base Url",
+            "description": "Call this endpoint directly instead of through the LangSmith gateway, with the workspace's TYPESAFE_API_KEY or OPENAI_API_KEY secret. Required for typesafe_compatible."
+          },
+          "model_headers": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Headers",
+            "description": "Headers sent with each model call. They are saved in the evaluator's prompt as given, so do not put API keys here."
+          },
+          "timeout_seconds": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timeout Seconds",
+            "description": "Seconds to wait for each model call. openai_decisions only."
+          },
+          "max_retries": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Retries",
+            "description": "How many times to retry a failed model call. openai_decisions only."
+          },
+          "playground_settings_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Configuration ID",
+            "description": "A saved model configuration to start from: its model, endpoint, key and settings apply unless set here."
+          },
+          "sampling_rate": {
+            "type": "number",
+            "title": "Sampling Rate",
+            "description": "The fraction of runs to evaluate.",
+            "default": 1.0
+          },
+          "filter": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Filter",
+            "description": "Only evaluate runs that match this filter."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "display_name",
+          "prompt",
+          "questions"
+        ],
+        "title": "DecisionModelRuleCreateSchema",
+        "description": "A decision-model evaluator to create and attach to a project or dataset."
+      },
       "DeleteClusteringJobConfigResponse": {
         "properties": {
           "id": {
@@ -59981,6 +60358,12 @@
               }
             ],
             "title": "Categories"
+          },
+          "allows_multiple_categories": {
+            "type": "boolean",
+            "title": "Allows Multiple Categories",
+            "description": "Whether a reviewer can pick several categories. Categorical feedback only.",
+            "default": false
           }
         },
         "type": "object",
@@ -62110,6 +62493,14 @@
         ],
         "title": "GetRunClusteringJobsResponse",
         "description": "A collection of Insights jobs."
+      },
+      "GetStartedPath": {
+        "type": "string",
+        "enum": [
+          "BUILD",
+          "CONNECT"
+        ],
+        "title": "GetStartedPath"
       },
       "GranularUsageDimensions": {
         "properties": {
@@ -70626,6 +71017,64 @@
         },
         "type": "object",
         "title": "RootModel[Dict[str, list[str]]]"
+      },
+      "RubricItemConditionRule": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "op": {
+            "type": "string",
+            "enum": [
+              "is",
+              "is_one_of",
+              "is_empty",
+              "is_not_empty"
+            ],
+            "title": "Op"
+          },
+          "values": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "title": "Values",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "op"
+        ],
+        "title": "RubricItemConditionRule"
+      },
+      "RubricItemConditions": {
+        "properties": {
+          "join": {
+            "type": "string",
+            "enum": [
+              "all",
+              "any"
+            ],
+            "title": "Join"
+          },
+          "rules": {
+            "items": {
+              "$ref": "#/components/schemas/RubricItemConditionRule"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Rules"
+          }
+        },
+        "type": "object",
+        "required": [
+          "join",
+          "rules"
+        ],
+        "title": "RubricItemConditions"
       },
       "RuleLogActionOutcome": {
         "type": "string",
@@ -79437,6 +79886,28 @@
             ],
             "title": "Data Plane Url"
           },
+          "data_plane_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Plane Name"
+          },
+          "data_plane_region": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Plane Region"
+          },
           "read_only": {
             "type": "boolean",
             "title": "Read Only",
@@ -80655,6 +81126,18 @@
         ],
         "title": "UpdateFeedbackConfigSchema"
       },
+      "UpdateGetStartedPathRequest": {
+        "properties": {
+          "path": {
+            "$ref": "#/components/schemas/GetStartedPath"
+          }
+        },
+        "type": "object",
+        "required": [
+          "path"
+        ],
+        "title": "UpdateGetStartedPathRequest"
+      },
       "UpdateRepoRequest": {
         "properties": {
           "description": {
@@ -81079,6 +81562,16 @@
               }
             ],
             "title": "Agent Monitoring Viewed At"
+          },
+          "get_started_path": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GetStartedPath"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "created_at": {
             "type": "string",
@@ -81611,6 +82104,28 @@
               }
             ],
             "title": "Data Plane Url"
+          },
+          "data_plane_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Plane Name"
+          },
+          "data_plane_region": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Plane Region"
           }
         },
         "type": "object",
@@ -81845,6 +82360,21 @@
               "type": "string"
             }
           },
+          "red_team_target": {
+            "description": "RedTeamTarget is the external A2A endpoint red-team runs probe instead\nof the validation deployment, or null when none is configured.",
+            "anyOf": [
+              {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/agent.RedTeamTargetView"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "run_filter": {
             "description": "RunFilter is a runs-filter-DSL string scoping which traces Engine analyzes\n(prompt guidance, not an enforced query). NULL = no scope. Clamped by\nvalidateRunFilter.",
             "type": "string"
@@ -81977,6 +82507,37 @@
           }
         }
       },
+      "agent.RedTeamTargetInput": {
+        "type": "object",
+        "properties": {
+          "headers": {
+            "description": "Headers are write-only and required unless clearing. An empty value\nkeeps that header's saved value while the url is unchanged.",
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "agent.RedTeamTargetView": {
+        "type": "object",
+        "properties": {
+          "auth": {
+            "description": "Auth describes the headers sent to this endpoint, and only to it.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/agent.TargetAuthStatus"
+              }
+            ]
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
       "agent.SaveOverviewRequest": {
         "type": "object",
         "properties": {
@@ -82072,6 +82633,14 @@
             "items": {
               "type": "string"
             }
+          },
+          "red_team_target": {
+            "description": "RedTeamTarget sets the external agent endpoint red-team runs probe and\nits authentication headers. An empty url clears both.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/agent.RedTeamTargetInput"
+              }
+            ]
           },
           "run_filter": {
             "description": "Trace-scope DSL. nil = don't change; \"\" clears it.",
@@ -89604,6 +90173,36 @@
           }
         ]
       },
+      "sandboxapi.ProxyRewriteConfig": {
+        "type": "object",
+        "required": [
+          "port"
+        ],
+        "properties": {
+          "credentials": {
+            "description": "Credentials is what happens to credential headers the sandbox sent, such as Authorization and Cookie: \"strip\" (the default) removes them, \"redact\" keeps each with its value replaced by \"redacted\" (after an auth scheme such as \"Bearer \"), and \"keep\" forwards them unchanged.",
+            "type": "string",
+            "enum": [
+              "strip",
+              "redact",
+              "keep"
+            ]
+          },
+          "host": {
+            "description": "Host is an HTTPS destination. Exactly one of host and sandbox is set.",
+            "type": "string"
+          },
+          "port": {
+            "type": "integer",
+            "maximum": 65535,
+            "minimum": 1
+          },
+          "sandbox": {
+            "description": "Sandbox is the name or ID of a sandbox to send requests to, over plain HTTP. A sandbox link from this sandbox to that sandbox's port must exist. Exactly one of host and sandbox is set.",
+            "type": "string"
+          }
+        }
+      },
       "sandboxapi.RunConfig": {
         "type": "object",
         "properties": {
@@ -90140,6 +90739,7 @@
             }
           },
           "fs_capacity_bytes": {
+            "description": "Disk for the sandbox, in bytes; defaults to the snapshot's and cannot be smaller. A sandbox with persistent=false gets at most 16 GiB of disk per vCPU, so at most 256 GiB: omit CPU and it is derived from the disk, set it and a larger disk is rejected.",
             "type": "integer"
           },
           "idle_ttl_seconds": {
@@ -90166,7 +90766,7 @@
             "type": "string"
           },
           "persistent": {
-            "description": "Persistent (private beta) keeps the sandbox's filesystem across stops (the default, true). Set it to false for a disposable sandbox: its writes are discarded whenever it stops, the next start boots it fresh from its snapshot, and it is never charged for storage. A sandbox that is not persistent cannot preserve memory on stop or have its filesystem captured as a snapshot (exporting a Docker image from it with docker_image still works), and some snapshots captured from other sandboxes cannot start one; such a create is rejected. Setting it to false requires the private beta to be enabled for your workspace.",
+            "description": "Persistent keeps the sandbox's filesystem across stops (the default, true). Set it to false for a disposable sandbox: its writes are discarded whenever it stops, the next start boots it fresh from its snapshot, and it is never charged for storage. A sandbox that is not persistent cannot preserve memory on stop or have its filesystem captured as a snapshot (exporting a Docker image from it with docker_image still works), and some snapshots captured from other sandboxes cannot start one; such a create is rejected.",
             "type": "boolean"
           },
           "preserve_memory_on_stop": {
@@ -90753,14 +91353,14 @@
             }
           },
           "match_headers": {
-            "description": "MatchHeaders restricts a header injection rule to requests carrying every listed header, each written \"name: value\" with a lowercase name and an exact value. Pair with headers of the same name to swap a placeholder the sandbox sends (e.g. \"authorization: Bearer account-b\") for a real credential, so one host can serve several accounts. Rules are evaluated in order and the first match wins.",
+            "description": "MatchHeaders restricts a header injection or rewrite rule to requests carrying every listed header, each written \"name: value\" with a lowercase name and an exact value. Pair with headers of the same name to swap a placeholder the sandbox sends (e.g. \"authorization: Bearer account-b\") for a real credential, so one host can serve several accounts. Rules are evaluated in order and the first match wins.",
             "type": "array",
             "items": {
               "type": "string"
             }
           },
           "match_hosts": {
-            "description": "MatchHosts is only accepted for header injection and relay rules.\nProvider auth rules use built-in host matching. A relay rule may also\nlist IP addresses and CIDR blocks (10.0.0.0/8), which match connections\nthe sandbox makes to an IP address rather than a name.",
+            "description": "MatchHosts is only accepted for header injection, rewrite, and relay rules.\nProvider auth rules use built-in host matching. A relay rule may also\nlist IP addresses and CIDR blocks (10.0.0.0/8), which match connections\nthe sandbox makes to an IP address rather than a name.",
             "type": "array",
             "items": {
               "type": "string"
@@ -90779,6 +91379,9 @@
             "description": "RelayID is the ID of the LangSmith relay (a connection of kind relay) that carries connections to match_hosts when type is relay. Those connections leave from the relay's connector, and its network and IP, instead of the sandbox host. Access control still applies first, the first enabled matching relay rule wins, and a matched host never falls back to a direct connection.",
             "type": "string",
             "format": "uuid"
+          },
+          "rewrite": {
+            "$ref": "#/components/schemas/sandboxapi.ProxyRewriteConfig"
           },
           "type": {
             "type": "string"
@@ -91037,7 +91640,7 @@
             "type": "string"
           },
           "persistent": {
-            "description": "Persistent (private beta) reports whether the sandbox keeps its filesystem across stops. When false, its writes are discarded whenever it stops and it is not charged for storage.",
+            "description": "Persistent reports whether the sandbox keeps its filesystem across stops. When false, its writes are discarded whenever it stops and it is not charged for storage.",
             "type": "boolean"
           },
           "preserve_memory_on_stop": {
@@ -91132,6 +91735,18 @@
             "format": "decimal",
             "example": "0.000123"
           },
+          "memory_gib_hours": {
+            "description": "Memory usage in GiB-hours, as a decimal string. Available with RESOURCE granularity; null means complete usage is unavailable.",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "decimal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "period_start": {
             "type": "string",
             "format": "date-time"
@@ -91143,8 +91758,32 @@
           "resource_type": {
             "$ref": "#/components/schemas/sandboxes.UsageCostResourceType"
           },
+          "storage_gib_hours": {
+            "description": "Storage usage in GiB-hours from hourly attributed-byte samples, including checkpoints. Available with RESOURCE granularity; null means complete usage is unavailable.",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "decimal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "storage_standard_units": {
             "description": "Allocated storage usage in Standard Units, as a decimal string, separate from LSU.\nNull means complete Standard storage usage is unavailable; \"0\" means known zero usage.",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "decimal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "vcpu_hours": {
+            "description": "CPU usage in vCPU-hours, as a decimal string. Available with RESOURCE granularity; null means complete usage is unavailable.",
             "anyOf": [
               {
                 "type": "string",
@@ -91184,8 +91823,44 @@
             "type": "string",
             "format": "decimal"
           },
+          "memory_gib_hours": {
+            "description": "Memory usage in GiB-hours, as a decimal string. Null means complete usage is unavailable.",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "decimal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "storage_gib_hours": {
+            "description": "Storage usage in GiB-hours from hourly attributed-byte samples, including checkpoints. Null means complete usage is unavailable.",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "decimal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "storage_standard_units": {
             "description": "Total storage usage in Standard Units across the entire filtered interval,\nindependent of pagination, as a decimal string, separate from LSU.\nNull means complete Standard storage usage is unavailable; \"0\" means known zero usage.",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "decimal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "vcpu_hours": {
+            "description": "CPU usage in vCPU-hours, as a decimal string. Null means complete usage is unavailable.",
             "anyOf": [
               {
                 "type": "string",
@@ -91205,6 +91880,14 @@
           "next_cursor"
         ],
         "properties": {
+          "daily": {
+            "description": "Daily usage over the full filtered interval, independent of pagination.\nOmitted unless requested, supported, and unrestricted resource access is verified.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/sandboxes.SandboxUsageDailyResponse"
+              }
+            ]
+          },
           "items": {
             "type": "array",
             "items": {
@@ -91228,6 +91911,80 @@
                 "$ref": "#/components/schemas/sandboxes.SandboxUsageCostTotals"
               }
             ]
+          }
+        }
+      },
+      "sandboxes.SandboxUsageDaily": {
+        "type": "object",
+        "required": [
+          "is_other",
+          "period_start"
+        ],
+        "properties": {
+          "is_other": {
+            "description": "Other combines resources outside the top groups. Their individual IDs are omitted.",
+            "type": "boolean"
+          },
+          "memory_gib_hours": {
+            "description": "Memory usage in GiB-hours, as a decimal string. Null means complete usage is unavailable.",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "decimal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "period_start": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "resource_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "resource_type": {
+            "$ref": "#/components/schemas/sandboxes.UsageCostResourceType"
+          },
+          "storage_gib_hours": {
+            "description": "Storage usage in GiB-hours from hourly attributed-byte samples. Null means complete usage is unavailable.",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "decimal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "vcpu_hours": {
+            "description": "CPU usage in vCPU-hours, as a decimal string. Null means complete usage is unavailable.",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "decimal"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "sandboxes.SandboxUsageDailyResponse": {
+        "type": "object",
+        "required": [
+          "entries"
+        ],
+        "properties": {
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/sandboxes.SandboxUsageDaily"
+            }
           }
         }
       },
@@ -92259,6 +93016,26 @@
         "properties": {
           "created_at": {
             "type": "string"
+          },
+          "data_plane_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "data_plane_region": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "data_plane_url": {
             "type": "string"
