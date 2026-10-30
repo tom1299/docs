@@ -56,7 +56,7 @@ const State = new StateSchema({
 });
 ```
 
-This state tracks a list of [message](https://js.langchain.com/docs/concepts/messages/) objects, as well as an extra integer field.
+This state tracks a list of [message](/oss/javascript/langchain/messages) objects, as well as an extra integer field.
 
 
 ### Update state
@@ -135,7 +135,7 @@ Note that:
 
 
 
-For convenience, we frequently inspect the content of [message objects](https://js.langchain.com/docs/concepts/messages/) via logging:
+For convenience, we frequently inspect the content of [message objects](/oss/javascript/langchain/messages) via logging:
 
 ```typescript
 for (const message of result.messages) {
@@ -212,7 +212,7 @@ ai: Hello!
 In practice, there are additional considerations for updating lists of messages:
 
 * We may wish to update an existing message in the state.
-* We may want to accept short-hands for [message formats](/oss/javascript/langgraph/graph-api#using-messages-in-your-graph), such as [OpenAI format](https://python.langchain.com/docs/concepts/messages/#openai-format).
+* We may want to accept short-hands for [message formats](/oss/javascript/langgraph/graph-api#using-messages-in-your-graph), such as [OpenAI format](/oss/javascript/langchain/messages#message-content).
 
 LangGraph includes the built-in `MessagesValue` that handles these considerations:
 
@@ -251,7 +251,7 @@ human: Hi
 ai: Hello!
 ```
 
-This is a versatile representation of state for applications involving [chat models](https://js.langchain.com/docs/concepts/chat_models/). LangGraph includes the prebuilt `MessagesValue` for convenience, so that we can have:
+This is a versatile representation of state for applications involving [chat models](/oss/javascript/langchain/models). LangGraph includes the prebuilt `MessagesValue` for convenience, so that we can have:
 
 ```typescript
 import { StateSchema, MessagesValue } from "@langchain/langgraph";
@@ -822,7 +822,7 @@ There are many use cases where you may wish for your node to have a custom retry
 
 
 
-To configure a retry policy, pass the `retryPolicy` parameter to the [`addNode`](https://reference.langchain.com/javascript/classes/_langchain_langgraph.index.Graph.html#addnode). The `retryPolicy` parameter takes in a `RetryPolicy` object. Below we instantiate a `RetryPolicy` object with the default parameters and associate it with a node:
+To configure a retry policy, pass the `retryPolicy` parameter to the [`addNode`](https://reference.langchain.com/javascript/langchain-langgraph/index/Graph). The `retryPolicy` parameter takes in a `RetryPolicy` object. Below we instantiate a `RetryPolicy` object with the default parameters and associate it with a node:
 
 ```typescript
 import { RetryPolicy } from "@langchain/langgraph";
@@ -1177,7 +1177,7 @@ Note that:
 
 ## Create branches
 
-Parallel execution of nodes is essential to speed up overall graph operation. LangGraph offers native support for parallel execution of nodes, which can significantly enhance the performance of graph-based workflows. This parallelization is achieved through fan-out and fan-in mechanisms, utilizing both standard edges and [conditional_edges](https://reference.langchain.com/javascript/classes/_langchain_langgraph.index.StateGraph.html#addConditionalEdges). Below are some examples showing how to add create branching dataflows that work for you.
+Parallel execution of nodes is essential to speed up overall graph operation. LangGraph offers native support for parallel execution of nodes, which can significantly enhance the performance of graph-based workflows. This parallelization is achieved through fan-out and fan-in mechanisms, utilizing both standard edges and [conditional_edges](https://reference.langchain.com/javascript/langchain-langgraph/index/StateGraph/addConditionalEdges). Below are some examples showing how to add create branching dataflows that work for you.
 
 ### Run graph nodes in parallel
 
@@ -1279,7 +1279,7 @@ Importantly, updates from a parallel superstep may not be ordered consistently. 
   If you have error-prone (perhaps want to handle flakey API calls), LangGraph provides two ways to address this:
 
   1. You can write regular python code within your node to catch and handle exceptions.
-  2. You can set a **[`RetryPolicy`](https://reference.langchain.com/python/langgraph/types/#langgraph.types.RetryPolicy)** to direct the graph to retry nodes that raise certain types of exceptions. Only failing branches are retried, so you needn't worry about performing redundant work.
+  2. You can set a **[`RetryPolicy`](https://reference.langchain.com/python/langgraph/types)** to direct the graph to retry nodes that raise certain types of exceptions. Only failing branches are retried, so you needn't worry about performing redundant work.
 
   Together, these let you perform parallel execution and fully control exception handling.
 </Accordion>
@@ -1288,7 +1288,7 @@ Importantly, updates from a parallel superstep may not be ordered consistently. 
 
 <Tip>
 **Set max concurrency**
-You can control the maximum number of concurrent tasks by setting `maxConcurrency` in the [configuration](https://reference.langchain.com/javascript/interfaces/_langchain_langgraph.index.LangGraphRunnableConfig.html) when invoking the graph. `maxConcurrency` is a standalone config key, so set it at the top level of the config rather than inside `configurable`.
+You can control the maximum number of concurrent tasks by setting `maxConcurrency` in the [configuration](https://reference.langchain.com/javascript/langchain-langgraph/index/LangGraphRunnableConfig) when invoking the graph. `maxConcurrency` is a standalone config key, so set it at the top level of the config rather than inside `configurable`.
 
 ```typescript
 const result = await graph.invoke({ value1: "c" }, { maxConcurrency: 10 });
@@ -1302,7 +1302,7 @@ const result = await graph.invoke({ value1: "c" }, { maxConcurrency: 10 });
 
 
 
-If your fan-out should vary at runtime based on the state, you can use [`addConditionalEdges`](https://reference.langchain.com/javascript/classes/_langchain_langgraph.index.StateGraph.html#addconditionaledges) to select one or more paths using the graph state. See example below, where node `a` generates a state update that determines the following node.
+If your fan-out should vary at runtime based on the state, you can use [`addConditionalEdges`](https://reference.langchain.com/javascript/langchain-langgraph/index/StateGraph) to select one or more paths using the graph state. See example below, where node `a` generates a state update that determines the following node.
 
 ```typescript
 import { StateGraph, StateSchema, ReducedValue, GraphNode, ConditionalEdgeRouter, START, END } from "@langchain/langgraph";
